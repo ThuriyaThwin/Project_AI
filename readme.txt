@@ -9,7 +9,7 @@ Générateur de dame(number dames);
 
 exemple :
 
-0 : a b c
+0 : a b c ( a b et c sont les index des pigeons )
 1 : a c
 2 : a b
 3 : ...
