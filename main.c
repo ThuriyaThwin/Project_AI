@@ -3,7 +3,7 @@
 
 #include "generator.h"
 
-int main(){
-    pigeonsGenerator(10);
+int main(int argc, char* argv[]){
+    pigeonsGenerator( atoi(argv[1]) );
     return 0;
 }
