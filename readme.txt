@@ -9,6 +9,7 @@ Générateur de dame(number dames);
 
 exemple :
 
+domaines
 0 : a b c ( a b et c sont les index des pigeons )
 1 : a c
 2 : a b
@@ -16,6 +17,7 @@ exemple :
 [...]
 m - 1 : a b c
 
+contraintes
 (1,2) :
 a b
 a c
