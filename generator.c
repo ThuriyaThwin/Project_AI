@@ -47,6 +47,8 @@ void pigeonsGenerator(int nbPigeons){
         }
     }
 
+    
+
     fclose(txt);
 }
 
