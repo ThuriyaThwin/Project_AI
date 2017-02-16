@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "generator.h"
+#include "util.h"
 
 // Génération pour le problème des pigeons
 void pigeonsGenerator(int nbPigeons){
@@ -7,6 +8,24 @@ void pigeonsGenerator(int nbPigeons){
         fprintf(stderr, "Erreur: nombre de pigeons < 0\n");
         return;
     }
+
+    struct CSP pigeon;
+
+    pigeon.domaine = malloc( nbPigeons * sizeof(int));
+    if( pigeon.domaine == NULL) return;
+
+    for(int i=0; i < nbPigeons-1; ++i){
+        pigeon.domaine[i] = malloc( (nbPigeons-1)*sizeof(int));
+        if( pigeon.domaine[i] == NULL ) return;
+    }
+
+    pigeon.domaine[0][0] = 1;
+
+    for(int i=0; i < nbPigeons-1; ++i){
+        free( pigeon.domaine[i] );
+    }
+
+    free( pigeon.domaine );
 
     printf("Nombre de pigeons : %d \n", nbPigeons);
 

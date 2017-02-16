@@ -4,10 +4,10 @@
 
 #include "util.h"
 
-struct CSP{
+struct CSP {
     int nbVar, nbVal;
 
-    int domaine[nbVar][nbVal]; //[pigeon][nid possible]
+    int** domaine;
 
     struct contraintes contrainte[nbVar][nbVar]; //null ou 1
 };
