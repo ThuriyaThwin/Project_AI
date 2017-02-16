@@ -9,11 +9,11 @@ struct CSP {
 
     int** domaine;
 
-    struct contraintes contrainte[nbVar][nbVar]; //null ou 1
+    //struct contraintes contrainte[nbVar][nbVar]; //null ou 1
 };
 
 
-struct contraintes{
+/*struct contraintes{
     int nbVal;
     int tuple[nbVal][nbVal];
-};
+};*/
