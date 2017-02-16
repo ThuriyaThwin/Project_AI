@@ -8,7 +8,7 @@ void pigeonsGenerator(int nbPigeons){
         return;
     }
 
-    printf("Nombre de pigeons selectiones : %d \n", nbPigeons);
+    printf("Nombre de pigeons : %d \n", nbPigeons);
 
     // Création d'un nouveau fichier de configuration pour les pigeons
     FILE* txt;
