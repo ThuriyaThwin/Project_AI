@@ -38,16 +38,13 @@ void pigeonsGenerator(int nbPigeons){
             if(i == j) continue;
             fprintf(txt, "(%d, %d)\n", i , j);
 
-            for(int k = 0; k < nbPigeons - 1; ++k){
+            for(int k = 0; k < nbPigeons - 1; ++k)
                 for(int l = 0; l < nbPigeons - 1; ++l) {
                     if(k == l) continue;
                     fprintf(txt, "%d %d\n", k, l);
                 }
-            }
         }
     }
-
-    
 
     fclose(txt);
 }
