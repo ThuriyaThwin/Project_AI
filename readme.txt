@@ -1,4 +1,4 @@
-Implementation de { FC (Look ahead) + heurisitique MD, BJ (Look back) + MC }
+rfImplementation de { FC (Look ahead) + heurisitique MD, BJ (Look back) + MC }
 
 Générateur de pigeon(number pigeons);
 Générateur de dame(number dames);
