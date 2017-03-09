@@ -4,16 +4,12 @@
 
 #include "util.h"
 
+typedef struct contrainte {
+    int** tuples;
+} contrainte;
+
 struct CSP {
     int nbVar, nbVal;
-
     int** domaine;
-
-    //struct contraintes contrainte[nbVar][nbVar]; //null ou 1
+    contrainte** contraintes;
 };
-
-
-/*struct contraintes{
-    int nbVal;
-    int tuple[nbVal][nbVal];
-};*/

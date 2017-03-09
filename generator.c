@@ -10,23 +10,51 @@ void pigeonsGenerator(int nbPigeons){
         return;
     }
 
-    struct CSP pigeon;
+    printf("Nombre de pigeons : %d \n", nbPigeons);
 
-    pigeon.domaine = malloc( nbPigeons * sizeof( *pigeon.domaine ) );
+    struct CSP pigeon;
+    int nbNests = nbPigeons-1;
+
+    // DOMAINES :
+    pigeon.domaine = malloc( nbPigeons * sizeof( int* ) );
     if( pigeon.domaine == NULL) return;
 
     for(int i=0; i < nbPigeons; ++i){
-        pigeon.domaine[i] = malloc( (nbPigeons-1) * sizeof( **pigeon.domaine ) );
+        pigeon.domaine[i] = malloc( nbNests * sizeof( int ) );
         if( pigeon.domaine[i] == NULL ) return;
     }
 
-    pigeon.domaine[0][0] = 1;
 
-    printf("--> %d\n", pigeon.domaine[0][0] );
-    printf(" çç %d\n", pigeon.domaine[nbPigeons-1][nbPigeons-2] );
+    // TUPLES :
+    struct contrainte contraintes;
+    contraintes.tuples = malloc( nbNests * sizeof( int* ) );
+    if( contraintes.tuples == NULL ) return;
+
+    for(int i=0; i < nbNests; ++i){
+        contraintes.tuples[i] = malloc( nbNests * sizeof( int ) );
+        if( contraintes.tuples[i] == NULL ) return;
+    }
 
 
-    printf("Nombre de pigeons : %d \n", nbPigeons);
+    // CONTRAINTES :
+    pigeon.contraintes = malloc( nbPigeons * sizeof( int* ) );
+    if( pigeon.contraintes == NULL ) return;
+
+    for(int i=0; i < nbPigeons; ++i){
+        pigeon.contraintes[i] = NULL;
+    }
+
+    printf("taille : %d - %d\n", nbPigeons, nbNests);
+
+    for(int i=0; i < nbPigeons; i++)
+        for(int j=0; j < nbNests; j++)
+            pigeon.domaine[i][j] = 1;
+
+    for(int i=0; i < nbPigeons; ++i){
+        for(int j=0; j < nbNests; j++){
+            printf("[%d][%d] = %d\n", i, j, pigeon.domaine[i][j]);
+        }
+    }
 
     // Création d'un nouveau fichier de configuration pour les pigeons
     FILE* txt;
@@ -66,11 +94,18 @@ void pigeonsGenerator(int nbPigeons){
 
     fclose(txt);
 
-
-    for(int i=0; i < nbPigeons-1; ++i)
+    for(int i=0; i < nbPigeons; ++i){
         free( pigeon.domaine[i] );
+        free( pigeon.contraintes[i] );
+    }
+
+    for(int i=0; i < nbNests; ++i){
+        free( contraintes.tuples[i] );
+    }
 
     free( pigeon.domaine );
+    free( pigeon.contraintes );
+    free( contraintes.tuples );
 }
 
 
