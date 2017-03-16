@@ -13,48 +13,31 @@ void pigeonsGenerator(int nbPigeons){
     printf("Nombre de pigeons : %d \n", nbPigeons);
 
     struct CSP pigeon;
-    int nbNests = nbPigeons-1;
 
-    // DOMAINES :
-    pigeon.domaine = malloc( nbPigeons * sizeof( int* ) );
-    if( pigeon.domaine == NULL) return;
+    int arrayOne[2][2] = {{1,2},{3,4}};
+    int arrayTwo[2][2] = {{5,6},{7,8}};
+    int arrayThree[2][2] = {{9,10},{11,12}};
+    int arrayFour[2][2] = {{14,15},{16,17}};
 
-    for(int i=0; i < nbPigeons; ++i){
-        pigeon.domaine[i] = malloc( nbNests * sizeof( int ) );
-        if( pigeon.domaine[i] == NULL ) return;
-    }
+    int* arrayP[4][1] = { {*arrayOne}, {*arrayTwo}, {*arrayThree}, {*arrayFour} };
 
+    printf("%d\n", arrayOne[1][1]);
 
-    // TUPLES :
-    struct contrainte contraintes;
-    contraintes.tuples = malloc( nbNests * sizeof( int* ) );
-    if( contraintes.tuples == NULL ) return;
+    for(int i=0; i < 4; ++i){
+        if( arrayP[i][0] != NULL){
 
-    for(int i=0; i < nbNests; ++i){
-        contraintes.tuples[i] = malloc( nbNests * sizeof( int ) );
-        if( contraintes.tuples[i] == NULL ) return;
-    }
+            for(int k=0; k < 2; ++k){
+                for(int l=0; l < 2; ++l){
 
+                    printf("arrayP[%d][%d]->array%d[%d][%d] = %d\n", i, 0, i, k, l, *(arrayP[i][0]) + k*2 + l );
 
-    // CONTRAINTES :
-    pigeon.contraintes = malloc( nbPigeons * sizeof( int* ) );
-    if( pigeon.contraintes == NULL ) return;
-
-    for(int i=0; i < nbPigeons; ++i){
-        pigeon.contraintes[i] = NULL;
-    }
-
-    printf("taille : %d - %d\n", nbPigeons, nbNests);
-
-    for(int i=0; i < nbPigeons; i++)
-        for(int j=0; j < nbNests; j++)
-            pigeon.domaine[i][j] = 1;
-
-    for(int i=0; i < nbPigeons; ++i){
-        for(int j=0; j < nbNests; j++){
-            printf("[%d][%d] = %d\n", i, j, pigeon.domaine[i][j]);
+                }
+            }
         }
     }
+
+    //printf("arrayP[0][0] -> arrayOne[0][3] = %d\n", ( *(arrayP[0][0]+1) +1));
+
 
     // Création d'un nouveau fichier de configuration pour les pigeons
     FILE* txt;
@@ -93,19 +76,6 @@ void pigeonsGenerator(int nbPigeons){
     }
 
     fclose(txt);
-
-    for(int i=0; i < nbPigeons; ++i){
-        free( pigeon.domaine[i] );
-        free( pigeon.contraintes[i] );
-    }
-
-    for(int i=0; i < nbNests; ++i){
-        free( contraintes.tuples[i] );
-    }
-
-    free( pigeon.domaine );
-    free( pigeon.contraintes );
-    free( contraintes.tuples );
 }
 
 
