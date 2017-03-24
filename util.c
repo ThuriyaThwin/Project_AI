@@ -3,11 +3,3 @@
 //
 
 #include "util.h"
-
-int** tuples;
-
-struct CSP {
-    int nbVar, nbVal;
-    int** domaine;
-    int** contraintesTuples;
-};

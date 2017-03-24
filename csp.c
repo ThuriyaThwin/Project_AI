@@ -1,5 +1,5 @@
 struct CSP {
     int nbVar, nbVal;
-    int** domaine;
+    int* contraintes;
     int** contraintesTuples;
 };

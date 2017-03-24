@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "generator.h"
-#include "util.c"
 
 // Génération pour le problème des pigeons
 void pigeonsGenerator(int nbPigeons){
@@ -11,8 +10,6 @@ void pigeonsGenerator(int nbPigeons){
     }
 
     printf("Nombre de pigeons : %d \n", nbPigeons);
-
-    struct CSP pigeon;
 
     int arrayOne[2][2] = {{1,2},{3,4}};
     int arrayTwo[2][2] = {{5,6},{7,8}};
@@ -35,6 +32,12 @@ void pigeonsGenerator(int nbPigeons){
             }
         }
     }
+
+    printf("%d\n", *(arrayP[2][0]) + 1*2 + 1);
+
+    
+
+
 
     //printf("arrayP[0][0] -> arrayOne[0][3] = %d\n", ( *(arrayP[0][0]+1) +1));
 
