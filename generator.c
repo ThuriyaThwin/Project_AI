@@ -1,14 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "generator.h"
+#include "solver.h"
 
 // Génération pour le problème des pigeons
 void pigeonsGenerator(int nbPigeons){
-    if( nbPigeons < 0 ){
-        fprintf(stderr, "Erreur: nombre de pigeons < 0\n");
+    if( nbPigeons <= 0 ){
+        fprintf(stderr, "Erreur: nombre de pigeons <= 0\n");
         return;
     }
 
+    int **domaines;
+
+    domaines = malloc(nbPigeons * sizeof(int));
+    for(int i = 0; i < nbPigeons; ++i){
+        domaines[i] = malloc((nbPigeons - 1) * sizeof(int));
+    }
+
+    for(int i = 0; i < nbPigeons; ++i){
+        for(int j = 0; j < nbPigeons - 1; ++j){
+            domaines[i][j] = 0;
+            printf("%d", domaines[i][j]);
+        }
+        printf("\n");
+    }
+
+    forwardChecking(domaines, nbPigeons);
+
+
+
+/*
     printf("Nombre de pigeons : %d \n", nbPigeons);
 
     int arrayOne[2][2] = {{1,2},{3,4}};
@@ -59,7 +80,6 @@ void pigeonsGenerator(int nbPigeons){
         for(int j=0; j < (nbPigeons-1); ++j)
             fprintf(txt, "%d ", j);
         fprintf(txt,"\n");
-
     }
 
     //Lignes contraintes C
@@ -76,9 +96,7 @@ void pigeonsGenerator(int nbPigeons){
                     fprintf(txt, "%d %d\n", k, l);
                 }
         }
-    }
-
-    fclose(txt);
+    }*/
 }
 
 
