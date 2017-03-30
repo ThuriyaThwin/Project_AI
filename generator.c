@@ -20,9 +20,9 @@ void pigeonsGenerator(int nbPigeons){
     for(int i = 0; i < nbPigeons; ++i){
         for(int j = 0; j < nbPigeons - 1; ++j){
             domaines[i][j] = 0;
-            printf("%d", domaines[i][j]);
+            //printf("%d", domaines[i][j]);
         }
-        printf("\n");
+        //printf("\n");
     }
 
     forwardChecking(domaines, nbPigeons);
