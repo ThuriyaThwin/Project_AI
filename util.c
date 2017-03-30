@@ -4,6 +4,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "util.h"
 
 
@@ -47,4 +48,24 @@ void empiler(Pile *pile, int **domaines) {
     nouveau->domaine = domaines;
     nouveau->suivant = pile->premier;
     pile->premier = nouveau;
+}
+
+Coords findLastModif(int **domaines, int nbPigeons){
+    Coords coords;
+    coords.x = -1;
+    coords.y = -1;
+    for(int i = 0; i < nbPigeons; ++i){
+        for(int j = 0; j < nbPigeons - 1; ++j){
+            if(domaines[i][j] == 1){
+                coords.x = i;
+                coords.y = j;
+            }
+        }
+    }
+    return coords;
+}
+
+void fillColumns(int **domaines, int i, int j, int nbPigeons, int value){
+    for(int k = i; k < nbPigeons; ++k)
+        domaines[k][j] = value;
 }
