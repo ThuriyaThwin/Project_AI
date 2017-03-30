@@ -6,15 +6,13 @@
 #define PROJET_IA_UTIL_H
 
 typedef struct Element Element;
-struct Element
-{
+struct Element {
     int **domaine;
     Element *suivant;
 };
 
 typedef struct Pile Pile;
-struct Pile
-{
+struct Pile {
     Element *premier;
 };
 

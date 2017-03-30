@@ -24,33 +24,25 @@ int** copyMatrice(int** matriceSource, int lengthDimOne, int lengthDimTwo){
     return newMatrice;
 }
 
-int **depiler(Pile *pile)
-{
+int **depiler(Pile *pile) {
     if (pile == NULL)
-    {
         exit(EXIT_FAILURE);
-    }
 
     int **domaine = 0;
     Element *elementDepile = pile->premier;
 
-    if (pile->premier != NULL)
-    {
+    if (pile->premier != NULL) {
         domaine = elementDepile->domaine;
         pile->premier = elementDepile->suivant;
         free(elementDepile);
     }
-
     return domaine;
 }
 
-void empiler(Pile *pile, int **domaines)
-{
+void empiler(Pile *pile, int **domaines) {
     Element *nouveau = malloc(sizeof(*nouveau));
     if (pile == NULL || nouveau == NULL)
-    {
         exit(EXIT_FAILURE);
-    }
 
     nouveau->domaine = domaines;
     nouveau->suivant = pile->premier;
