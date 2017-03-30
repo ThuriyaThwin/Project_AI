@@ -27,8 +27,6 @@ void pigeonsGenerator(int nbPigeons){
 
     forwardChecking(domaines, nbPigeons);
 
-
-
 /*
     printf("Nombre de pigeons : %d \n", nbPigeons);
 
@@ -56,7 +54,7 @@ void pigeonsGenerator(int nbPigeons){
 
     printf("%d\n", *(arrayP[2][0]) + 1*2 + 1);
 
-    
+
 
 
 

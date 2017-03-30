@@ -1,23 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-
-int** copyMatrice(int** matriceSource, int nbPigeons){
-    int** newMatrice;
-
-    newMatrice = malloc(nbPigeons * sizeof(int*));
-    for(int i = 0; i < nbPigeons; ++i){
-        newMatrice[i] = malloc( (nbPigeons - 1) * sizeof(int) );
-    }
-
-    for(int i=0; i < nbPigeons; ++i){
-        for(int j=0; j < (nbPigeons-1); ++j){
-            newMatrice[i][j] = matriceSource[i][j];
-        }
-    }
-
-    return newMatrice;
-}
+#include "util.c"
 
 int main(int argc, char** argv){
     if( argc != 2 ){
@@ -45,6 +28,10 @@ int main(int argc, char** argv){
         }
         printf("\n");
     }
+
+
+
+
 
     int** domaines_init = copyMatrice(domaines, nbPigeons);
     printf("%d\n", domaines_init[0][0]);
