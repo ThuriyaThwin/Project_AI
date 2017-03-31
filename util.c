@@ -7,14 +7,50 @@
 #include <stdio.h>
 #include "util.h"
 
+void printMatrice(int** matrice, int lengthDimOne, int lengthDimTwo){
+    int i, j;
+    for(i = 0; i < lengthDimOne; ++i){
+        for(j = 0; j < lengthDimTwo; ++j){
+            matrice[i][j] = 0;
+            printf("[ %d ]", matrice[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void resetMatrice(int** matrice, int lengthDimOne, int lengthDimTwo){
+    for(int i=0; i < lengthDimOne; ++i){
+        for(int j=0; j < lengthDimTwo; ++j){
+            matrice[i][j] = 0;
+        }
+    }
+}
+
+int** createNewMatrice(int lengthDimOne, int lengthDimTwo){
+    int** newMatrice = malloc( lengthDimOne * sizeof(int*));
+    if(newMatrice != NULL){
+        for(int i = 0; i < lengthDimOne; ++i){
+            newMatrice[i] = malloc( lengthDimTwo * sizeof(int) );
+            if( (newMatrice[i] == NULL) ){
+                printf("Erreur : newMatrice[%d] NULL.\n", i);
+                exit(-1);
+            }
+        }
+    }
+    else{
+        printf("Erreur : newMatrice, première dimension NULL.\n");
+        exit(-1);
+    }
+
+    resetMatrice(newMatrice, lengthDimOne, lengthDimTwo);
+    return newMatrice;
+}
+
 
 int** copyMatrice(int** matriceSource, int lengthDimOne, int lengthDimTwo){
     int** newMatrice;
 
-    newMatrice = malloc( lengthDimOne * sizeof(int*));
-    for(int i = 0; i < lengthDimOne; ++i){
-        newMatrice[i] = malloc( lengthDimTwo * sizeof(int) );
-    }
+    newMatrice = createNewMatrice(lengthDimOne, lengthDimTwo);
 
     for(int i=0; i < lengthDimOne; ++i){
         for(int j=0; j < lengthDimTwo; ++j){

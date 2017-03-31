@@ -9,36 +9,29 @@ int main(int argc, char** argv){
     }
 
     int i, j;
-    int **domaines;
+    int** domaines;
+    int** domaines_init;
     int nbPigeons = atoi(argv[1]);
 
     printf("Démarrage avec %d pigeons & %d nids.\n", nbPigeons, (nbPigeons-1));
-    printf("MATRICE DOMAINE :\n");
 
-    domaines = malloc(nbPigeons * sizeof(int*));
-    for(i = 0; i < nbPigeons; ++i){
-        domaines[i] = malloc( (nbPigeons - 1) * sizeof(int) );
+    // Initialisation d'une matrice
+    domaines = createNewMatrice(nbPigeons, nbPigeons-1);
+    domaines_init = copyMatrice(domaines, nbPigeons, nbPigeons-1);
+
+    printf("Matrice init :\n");
+    printMatrice(domaines, nbPigeons, nbPigeons-1);
+
+    printf("Matrice copy init :\n");
+    printMatrice(domaines_init, nbPigeons, nbPigeons-1);
+
+    for(i=0; i < nbPigeons; ++i){
+        free(domaines[i]);
+        free(domaines_init[i]);
     }
 
-    for(i = 0; i < nbPigeons; ++i){
-        for(j = 0; j < nbPigeons - 1; ++j){
-            domaines[i][j] = 0;
-            printf("%d", domaines[i][j]);
-        }
-        printf("\n");
-    }
-
-
-    
-
-
-
-    //int** domaines_init = copyMatrice(domaines, nbPigeons, nbPigeons-1);
-
-
-
-    for(i=0; i < nbPigeons; ++i){ free(domaines[i]); }
     free( domaines );
+    free( domaines_init );
 
     return 0;
 }
