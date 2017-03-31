@@ -85,10 +85,12 @@ void wipeStack(Stack* stack, int row){
 void printAllStack(Stack* stack, int row, int col){
     Node* index = stack->top;
 
+    printf("-- AFFICHAGE PILE MATRICE --\n");
     while( index != NULL ){
         printMatrix(index->matrix, row, col);
         index = index->next;
     }
+    printf("-- FOND DE PILE --\n");
 }
 
 /*
