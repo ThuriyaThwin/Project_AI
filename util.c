@@ -101,7 +101,6 @@ void printMatrix(int** matrix, int row, int col){
     printf("{\n");
     for(i = 0; i < row; ++i){
         for(j = 0; j < col; ++j){
-            matrix[i][j] = 0;
             printf("[ %d ]", matrix[i][j]);
         }
         printf("\n");

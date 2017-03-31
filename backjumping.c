@@ -13,17 +13,31 @@ int main(int argc, char** argv){
     int nbPigeons = atoi(argv[1]);
     int nbNids = (nbPigeons-1);
 
-    Stack* stack = initStack();
+
     printf("Démarrage avec %d pigeons & %d nids.\n", nbPigeons, nbNids);
 
     // Initialisation d'une matrice
     domaineInit = createNewMatrix(nbPigeons, nbNids);
-    push(stack, domaineInit, nbPigeons, nbNids);
+
+    // Initialisation de la pile de matrice
+    Stack* stack = initStack();
+
+    domaineInit[0][0] = 1;
+
+    printMatrix(domaineInit, nbPigeons, nbNids);
+
+
+
+
+
+
+
+
 
     printAllStack(stack, nbPigeons, nbNids);
     //printMatrix(stack->top->matrix, nbPigeons, nbNids);
 
-    
+
     wipeStack(stack, nbPigeons);
 
     for(i=0; i < nbPigeons; ++i){
