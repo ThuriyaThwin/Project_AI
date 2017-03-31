@@ -8,30 +8,26 @@ int main(int argc, char** argv){
         exit(-1);
     }
 
-    int i, j;
+    int i;
     int** domaines;
-    int** domaines_init;
     int nbPigeons = atoi(argv[1]);
+    int nbNids = (nbPigeons-1);
 
-    printf("Démarrage avec %d pigeons & %d nids.\n", nbPigeons, (nbPigeons-1));
+    Stack* stack = initStack();
+    printf("Démarrage avec %d pigeons & %d nids.\n", nbPigeons, nbNids);
 
     // Initialisation d'une matrice
-    domaines = createNewMatrice(nbPigeons, nbPigeons-1);
-    domaines_init = copyMatrice(domaines, nbPigeons, nbPigeons-1);
-
-    printf("Matrice init :\n");
-    printMatrice(domaines, nbPigeons, nbPigeons-1);
-
-    printf("Matrice copy init :\n");
-    printMatrice(domaines_init, nbPigeons, nbPigeons-1);
+    domaines = createNewMatrix(nbPigeons, nbNids);
+    push(stack, domaines, nbPigeons, nbNids);
+    printMatrix(stack->top->matrix, nbPigeons, nbNids);
 
     for(i=0; i < nbPigeons; ++i){
         free(domaines[i]);
-        free(domaines_init[i]);
     }
 
     free( domaines );
-    free( domaines_init );
+
+    wipeStack(stack, nbPigeons);
 
     return 0;
 }

@@ -7,31 +7,108 @@
 #include <stdio.h>
 #include "util.h"
 
-void printMatrice(int** matrice, int lengthDimOne, int lengthDimTwo){
+/*
+    GESTION PILE
+*/
+// Fonction d'initialisation de la Pile
+Stack* initStack(){
+    Stack* stack = malloc(sizeof( *stack ));
+    stack->top = NULL;
+
+    return stack;
+}
+
+// Ajout d'une sauvegarde de matrice dans la Pile
+// IMPORTANT : Copie par Valeur faite automatiquement lors du push (on duplique la matrice actuelle | 2 pointeurs)
+//                          ^-----> void createNewMatrice(int** matrix);
+void push(Stack* stack, int** matrix, int row, int col){
+    Node* newTop = malloc(sizeof( *newTop ));
+    if( stack == NULL || newTop == NULL ){
+        printf("Erreur : stack or newTop NULL.\n");
+        exit(-1);
+    }
+
+    newTop->matrix = copyMatrix(matrix, row, col);
+    newTop->next = stack->top;
+    stack->top = newTop;
+}
+
+// Retirement du premier élément de la Pile
+// Renvoie une matrice
+int** pop(Stack* stack){
+    if( stack == NULL ){
+        printf("Erreur : stack NULL.\n");
+        exit(-1);
+    }
+
+    int** tmpMatrice;
+
+    if( stack->top != NULL ){
+        tmpMatrice = stack->top->matrix;
+        Node* node = stack->top;
+        stack->top = stack->top->next;
+        free(node); // Libération du noeud qui n'est plus utilisé.
+    }
+    else{
+        printf("Erreur : top NULL.\n");
+        exit(-1);
+    }
+
+    return tmpMatrice;
+}
+
+
+void wipeStack(Stack* stack, int row){
+    while( stack->top != NULL ){
+        // Libération de la deuxième dimension de notre matrice
+        for(int i=0; i < row; ++i){
+            if( stack->top->matrix[i] != NULL ){
+                free(stack->top->matrix[i]);
+            }
+            else{
+                printf("Erreur : wipeStack [%d] NULL.\n", i);
+                exit(-1);
+            }
+        }
+        free( stack->top->matrix ); // Libération de la première dimension
+
+        Node* top = stack->top;
+        stack->top = stack->top->next;
+        free(top);
+    }
+
+    free(stack);
+}
+
+/*
+GESTION MATRICE
+*/
+
+void printMatrix(int** matrix, int row, int col){
     int i, j;
-    for(i = 0; i < lengthDimOne; ++i){
-        for(j = 0; j < lengthDimTwo; ++j){
-            matrice[i][j] = 0;
-            printf("[ %d ]", matrice[i][j]);
+    for(i = 0; i < row; ++i){
+        for(j = 0; j < col; ++j){
+            matrix[i][j] = 0;
+            printf("[ %d ]", matrix[i][j]);
         }
         printf("\n");
     }
 }
 
-void resetMatrice(int** matrice, int lengthDimOne, int lengthDimTwo){
-    for(int i=0; i < lengthDimOne; ++i){
-        for(int j=0; j < lengthDimTwo; ++j){
-            matrice[i][j] = 0;
+void resetMatrix(int** matrix, int row, int col){
+    for(int i=0; i < row; ++i){
+        for(int j=0; j < col; ++j){
+            matrix[i][j] = 0;
         }
     }
 }
 
-int** createNewMatrice(int lengthDimOne, int lengthDimTwo){
-    int** newMatrice = malloc( lengthDimOne * sizeof(int*));
-    if(newMatrice != NULL){
-        for(int i = 0; i < lengthDimOne; ++i){
-            newMatrice[i] = malloc( lengthDimTwo * sizeof(int) );
-            if( (newMatrice[i] == NULL) ){
+int** createNewMatrix(int row, int col){
+    int** newMatrix = malloc( row * sizeof(int*));
+    if(newMatrix != NULL){
+        for(int i = 0; i < row; ++i){
+            newMatrix[i] = malloc( col * sizeof(int) );
+            if( (newMatrix[i] == NULL) ){
                 printf("Erreur : newMatrice[%d] NULL.\n", i);
                 exit(-1);
             }
@@ -42,49 +119,28 @@ int** createNewMatrice(int lengthDimOne, int lengthDimTwo){
         exit(-1);
     }
 
-    resetMatrice(newMatrice, lengthDimOne, lengthDimTwo);
-    return newMatrice;
+    resetMatrix(newMatrix, row, col);
+    return newMatrix;
 }
 
 
-int** copyMatrice(int** matriceSource, int lengthDimOne, int lengthDimTwo){
+int** copyMatrix(int** sourceMatrix, int row, int col){
     int** newMatrice;
-
-    newMatrice = createNewMatrice(lengthDimOne, lengthDimTwo);
-
-    for(int i=0; i < lengthDimOne; ++i){
-        for(int j=0; j < lengthDimTwo; ++j){
-            newMatrice[i][j] = matriceSource[i][j];
+    newMatrice = createNewMatrix(row, col);
+    for(int i=0; i < row; ++i){
+        for(int j=0; j < col; ++j){
+            newMatrice[i][j] = sourceMatrix[i][j];
         }
     }
 
     return newMatrice;
 }
 
-int **depiler(Pile *pile) {
-    if (pile == NULL)
-        exit(EXIT_FAILURE);
 
-    int **domaine = 0;
-    Element *elementDepile = pile->premier;
 
-    if (pile->premier != NULL) {
-        domaine = elementDepile->domaine;
-        pile->premier = elementDepile->suivant;
-        free(elementDepile);
-    }
-    return domaine;
-}
 
-void empiler(Pile *pile, int **domaines) {
-    Element *nouveau = malloc(sizeof(*nouveau));
-    if (pile == NULL || nouveau == NULL)
-        exit(EXIT_FAILURE);
 
-    nouveau->domaine = domaines;
-    nouveau->suivant = pile->premier;
-    pile->premier = nouveau;
-}
+
 
 Coords findLastModif(int **domaines, int nbPigeons){
     Coords coords;
