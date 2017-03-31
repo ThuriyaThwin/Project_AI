@@ -57,7 +57,8 @@ int** pop(Stack* stack){
     return tmpMatrice;
 }
 
-
+// Suppression et libération de mémoire pour toutes les matrices contenues dans la pile
+// Suppression de libération de mémoire de la pile
 void wipeStack(Stack* stack, int row){
     while( stack->top != NULL ){
         // Libération de la deuxième dimension de notre matrice
@@ -80,12 +81,24 @@ void wipeStack(Stack* stack, int row){
     free(stack);
 }
 
+// Affiche toutes les matrices stockées dans la pile
+void printAllStack(Stack* stack, int row, int col){
+    Node* index = stack->top;
+
+    while( index != NULL ){
+        printMatrix(index->matrix, row, col);
+        index = index->next;
+    }
+}
+
 /*
 GESTION MATRICE
 */
 
+// Affiche une matrice row*col
 void printMatrix(int** matrix, int row, int col){
     int i, j;
+    printf("{\n");
     for(i = 0; i < row; ++i){
         for(j = 0; j < col; ++j){
             matrix[i][j] = 0;
@@ -93,8 +106,10 @@ void printMatrix(int** matrix, int row, int col){
         }
         printf("\n");
     }
+    printf("}\n");
 }
 
+// Remet à 0 une matrice row*col
 void resetMatrix(int** matrix, int row, int col){
     for(int i=0; i < row; ++i){
         for(int j=0; j < col; ++j){
@@ -103,6 +118,7 @@ void resetMatrix(int** matrix, int row, int col){
     }
 }
 
+// Créer une nouvelle matrice row*col
 int** createNewMatrix(int row, int col){
     int** newMatrix = malloc( row * sizeof(int*));
     if(newMatrix != NULL){
@@ -123,7 +139,7 @@ int** createNewMatrix(int row, int col){
     return newMatrix;
 }
 
-
+// Copie par valeur d'une matice row*col vers une nouvelle row*col
 int** copyMatrix(int** sourceMatrix, int row, int col){
     int** newMatrice;
     newMatrice = createNewMatrix(row, col);
