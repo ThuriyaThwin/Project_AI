@@ -15,7 +15,6 @@ int main(int argc, char** argv){
     printf("Démarrage avec %d pigeons & %d nids.\n", nbPigeons, (nbPigeons-1));
     printf("MATRICE DOMAINE :\n");
 
-
     domaines = malloc(nbPigeons * sizeof(int*));
     for(i = 0; i < nbPigeons; ++i){
         domaines[i] = malloc( (nbPigeons - 1) * sizeof(int) );
@@ -30,11 +29,13 @@ int main(int argc, char** argv){
     }
 
 
+    
 
 
 
-    int** domaines_init = copyMatrice(domaines, nbPigeons);
-    printf("%d\n", domaines_init[0][0]);
+    //int** domaines_init = copyMatrice(domaines, nbPigeons, nbPigeons-1);
+
+
 
     for(i=0; i < nbPigeons; ++i){ free(domaines[i]); }
     free( domaines );
