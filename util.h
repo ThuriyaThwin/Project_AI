@@ -28,10 +28,15 @@ int** createNewMatrix(int row, int col);
 int** copyMatrix(int** sourceMatrix, int row, int col);
 void resetMatrix(int** matrix, int row, int col);
 void printMatrix(int** matrix, int row, int col);
+void wipeMatrix(int** matrix, int row);
+int checkForConstraintInCol(int** matrix, int number_of_the_col, int nbTotalRow);
+int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol);
+
 
 Stack* initStack();
 void wipeStack(Stack* stack, int row);
 int** pop(Stack* stack);
+int** pop_n_time(Stack* stack, int nTime, int row);
 void push(Stack* stack, int** matrix, int row, int col);
 
 

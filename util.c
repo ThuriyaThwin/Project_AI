@@ -34,7 +34,7 @@ void push(Stack* stack, int** matrix, int row, int col){
 }
 
 // Retirement du premier élément de la Pile
-// Renvoie une matrice
+// Renvoie une matricer
 int** pop(Stack* stack){
     if( stack == NULL ){
         printf("Erreur : stack NULL.\n");
@@ -57,28 +57,25 @@ int** pop(Stack* stack){
     return tmpMatrice;
 }
 
+int** pop_n_time(Stack* stack, int nTime, int row){
+    for(int i=0; i < nTime-1; ++i){
+        wipeMatrix(pop(stack), row);
+    }
+
+    return pop(stack);
+}
+
 // Suppression et libération de mémoire pour toutes les matrices contenues dans la pile
 // Suppression de libération de mémoire de la pile
 void wipeStack(Stack* stack, int row){
     while( stack->top != NULL ){
-        // Libération de la deuxième dimension de notre matrice
-        for(int i=0; i < row; ++i){
-            if( stack->top->matrix[i] != NULL ){
-                free(stack->top->matrix[i]);
-            }
-            else{
-                printf("Erreur : wipeStack [%d] NULL.\n", i);
-                exit(-1);
-            }
-        }
-        free( stack->top->matrix ); // Libération de la première dimension
-
+        wipeMatrix(stack->top->matrix, row); // Libération de la mémoire allouée pour la matrice
         Node* top = stack->top;
         stack->top = stack->top->next;
-        free(top);
+        free(top); // Libération du noeud dépilé
     }
 
-    free(stack);
+    free(stack); // Libération de la pile
 }
 
 // Affiche toutes les matrices stockées dans la pile
@@ -140,23 +137,47 @@ int** createNewMatrix(int row, int col){
     return newMatrix;
 }
 
+void wipeMatrix(int** matrix, int row){
+    for(int i=0; i < row; ++i){
+        free(matrix[i]); // Libération deuxième dimension
+    }
+    free( matrix); // Libération première dimension
+}
+
 // Copie par valeur d'une matice row*col vers une nouvelle row*col
 int** copyMatrix(int** sourceMatrix, int row, int col){
-    int** newMatrice;
-    newMatrice = createNewMatrix(row, col);
+    int** newMatrix;
+    newMatrix = createNewMatrix(row, col);
     for(int i=0; i < row; ++i){
         for(int j=0; j < col; ++j){
-            newMatrice[i][j] = sourceMatrix[i][j];
+            newMatrix[i][j] = sourceMatrix[i][j];
         }
     }
 
-    return newMatrice;
+    return newMatrix;
 }
 
+// Fonction qui a pour but de vérifier si il existe un 1 dans une colonne donnée
+// Renvoie le numéro de ligne si trouvé
+// Sinon -1
+int checkForConstraintInCol(int** matrix, int number_of_the_col, int nbTotalRow){
+    for(int i=0; i < nbTotalRow; ++i){
+        if( matrix[i][number_of_the_col] == 1 )
+            return i;
+    }
+    return -1;
+}
 
-
-
-
+// Fonction qui a pour but de vérifier si il existe un 1 dans une ligne donnée
+// Renvoie le numéro de colonne si trouvé
+// Sinon -1
+int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol){
+    for(int i=0; i < nbTotalCol; ++i){
+        if( matrix[number_of_the_row][i] == 1 )
+            return i;
+    }
+    return -1;
+}
 
 
 Coords findLastModif(int **domaines, int nbPigeons){
