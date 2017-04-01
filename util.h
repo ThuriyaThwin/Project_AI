@@ -38,6 +38,7 @@ void wipeStack(Stack* stack, int row);
 int** pop(Stack* stack);
 int** pop_n_time(Stack* stack, int nTime, int row);
 void push(Stack* stack, int** matrix, int row, int col);
+void printAllStack(Stack* stack, int row, int col);
 
 
 #endif //PROJET_IA_UTIL_H

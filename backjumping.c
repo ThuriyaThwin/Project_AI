@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "util.c"
+
+/*
+    COMPILATION :
+
+    gcc -Wall -o backjumping backjumping.c
+*/
 
 int main(int argc, char** argv){
     if( argc != 2 ){
@@ -9,12 +16,15 @@ int main(int argc, char** argv){
     }
 
     int i, j;
-    int nbPigeons = atoi(argv[1]); // Nombre de pigeon indiqués parl l'utilisateur.
+    int nbPigeons = atoi(argv[1]); // Nombre de pigeon indiqués par l'utilisateur.
     int nbNids = (nbPigeons-1);     // Nombre de nids, ici automatiquement pigeon - 1.
 
-    printf("Démarrage avec %d pigeons & %d nids.\n", nbPigeons, nbNids);
+    printf("Init BackJumping avec %d pigeons & %d nids.\n", nbPigeons, nbNids);
     int** matrixDomaine = createNewMatrix(nbPigeons, nbNids); // Initialisation d'une matrice
     Stack* stack = initStack(); // Initialisation de la pile de matrice
+
+    int resultFound = 0;    // Booleen indiquant si au moins un résultat a été trouvé
+    Stack* result = initStack(); // Initialisation pile des résultats positifs
 
     int constraintInRow; // checkForConstraintInRow
     int constraintInCol; // checkForConstraintInCol
@@ -22,9 +32,12 @@ int main(int argc, char** argv){
     // Sauvegarde de la contrainte violée la plus profonde
     int deepestViolatedConstraint = nbPigeons;
 
+    clock_t begin = clock();
+
     for(i=0; i < nbPigeons; ){
         // Si le domaine du premier pigeon à été entièrement parcouru -> arrêt.
         if( matrixDomaine[0][(nbNids-1)] == -1 ) break;
+        if( nbPigeons == 1 ) break;
 
         for(j=0; j < nbNids; ){
             // On test si un pigeon est déjà placé dans le nid j
@@ -45,7 +58,10 @@ int main(int argc, char** argv){
                 */
                 // SOLUTION TROUVEE si i == dernier pigeon
                 if( i == (nbPigeons-1) ){
-                    printf("\nSOLUTION TROUVEE :\n");
+                    //printf("\nSOLUTION TROUVEE :\n");
+
+                    resultFound = 1;
+                    push(result, matrixDomaine, nbPigeons, nbNids);
 
                     matrixDomaine = pop_n_time(stack, i, nbPigeons); // On revient à l'état de la matrice où pigeon 1 à réussi à être placé
                     matrixDomaine[0][j] = -1;   // ça valeur est mise à -1 pour indiqué qu'on a bien vu cette ligne
@@ -93,7 +109,7 @@ int main(int argc, char** argv){
                         deepestViolatedConstraint = nbPigeons;
                     }
                     else{
-                        matrixDomaine = pop(stack);
+                        matrixDomaine = pop(stack); // On dépile la précédente matrice sauvegardée
                         constraintInRow = checkForConstraintInRow(matrixDomaine, i-1, nbNids);
                         matrixDomaine[i-1][constraintInRow] = -1;
                         --i; // On revient en arrière de 1
@@ -105,11 +121,21 @@ int main(int argc, char** argv){
             }
         }
     }
+    clock_t end = clock();
 
-    //printAllStack(stack, nbPigeons, nbNids);
-    // Libération de mémoire ----
+    if( resultFound == 1 ){
+        printf("SOLUTION(S) TROUVEE(S):\n");
+        printAllStack(result, nbPigeons, nbNids);
+    }
+    else
+        printf("0 SOLUTIONS POUR %d PIGEONS\n", nbPigeons);
 
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("TEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
+
+    // Libération de mémoire
     wipeStack(stack, nbPigeons);
+    wipeStack(result, nbPigeons);
     wipeMatrix(matrixDomaine, nbPigeons);
 
     return 0;
