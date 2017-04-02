@@ -47,8 +47,6 @@ int main(int argc, char** argv){
             if( constraintInCol < 0 ){
                 matrixDomaine[i][j] = 1; // Le pigeon i est donc placé dans le nid j
 
-                //printMatrix(matrixDomaine, nbPigeons, nbNids);
-
                 /*
                     Nous regardons dans une premier temps si il est possible de de passer au pigeon i+1
                     Dans le cas où sela ne serait pas possible  -> nous sommes arrivés au dernier pigeon
@@ -82,7 +80,6 @@ int main(int argc, char** argv){
                     deepestViolatedConstraint = constraintInCol;
                 }
                 matrixDomaine[i][j] = -1; // Nous indiquons dans la matrice qu'il n'est pas possible de placer de pigeon à cet endroit
-                //printMatrix(matrixDomaine, nbPigeons, nbNids);
 
                 /* Test pour savoir si tous les nids j pour le pigeon i ont été testés */
                 if( j == (nbNids-1) ){
@@ -105,7 +102,6 @@ int main(int argc, char** argv){
                         i=deepestViolatedConstraint;
                         j=constraintInRow;
                         matrixDomaine[i][j] = -1;
-                        //printMatrix(matrixDomaine, nbPigeons, nbNids);
                         deepestViolatedConstraint = nbPigeons;
                     }
                     else{
@@ -119,6 +115,8 @@ int main(int argc, char** argv){
 
                 ++j;
             }
+
+            printMatrix(matrixDomaine, nbPigeons, nbNids);
         }
     }
     clock_t end = clock();
