@@ -11,9 +11,13 @@ void pigeonsGenerator(int nbPigeons){
         return;
     }
 
-    /*int **domaines;
+    /*
 
-    domaines = malloc(nbPigeons * sizeof(int));
+    // SECTION USELESS, UTILISER LE UTIL.C pour créer matrice
+    // Le faire directement dans le forwardChecking ...
+    int **domaines;
+
+    domaines = malloc(nbPigeons * sizeof(*int));
     for(int i = 0; i < nbPigeons; ++i){
         domaines[i] = malloc((nbPigeons - 1) * sizeof(int));
     }

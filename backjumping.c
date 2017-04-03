@@ -10,98 +10,75 @@
 */
 
 void backjumping(int nbValue, int nbDomaine, int showMatrix){
-    int i, j;
 
     printf("Init BackJumping avec %d valeur & %d domaine.\n", nbValue, nbDomaine);
-    int** matrixDomaine = createNewMatrix(nbValue, nbDomaine); // Initialisation d'une matrice
-    Stack* stack = initStack(); // Initialisation de la pile de matrice
+    int** matrixDomaine = createNewMatrix(nbValue, nbDomaine);                          // Initialisation d'une matrice initiale
+    Stack* stack = initStack();                                                         // Initialisation de la pile de matrice
+    Stack* result = initStack();                                                        // Initialisation pile des résultats positifs
 
-    int resultFound = 0;    // Booleen indiquant si au moins un résultat a été trouvé
-    Stack* result = initStack(); // Initialisation pile des résultats positifs
+    int i, j;                                                                           // Itérateurs boucle for
+    int resultFound = 0;                                                                // Booleen indiquant si au moins un résultat a été trouvé
+    int constraintInRow;                                                                // stock le resultat de checkForConstraintInRow
+    int constraintInCol;                                                                // checkForConstraintInCol
+    int deepestViolatedConstraint = nbValue;                                            // Sauvegarde de la contrainte violée la plus profonde
 
-    int constraintInRow; // checkForConstraintInRow
-    int constraintInCol; // checkForConstraintInCol
-
-    // Sauvegarde de la contrainte violée la plus profonde
-    int deepestViolatedConstraint = nbValue;
-
-    clock_t begin = clock();
+    clock_t begin = clock();                                                            // Démarrage du compteur de temps
 
     for(i=0; i < nbValue; ){
-        // Si le domaine du premier pigeon à été entièrement parcouru -> arrêt.
-        if( matrixDomaine[0][(nbDomaine-1)] == -1 ) break;
-        if( nbValue == 1 ) break;
+
+        if( matrixDomaine[0][(nbDomaine-1)] == -1 ) break;                              // Si le domaine du premier pigeon à été entièrement parcouru -> arrêt.
+        if( nbDomaine == 0 ){                                                           // Si le nombre de domaine == 0, impossible de réaliser un quelconque parcour
+            printf("nbDomaine <= 0\n");
+            break;
+        }
 
         for(j=0; j < nbDomaine; ){
-            // On test si un pigeon est déjà placé dans le nid j
-            constraintInCol = checkForConstraintInCol(matrixDomaine, j, nbValue);
+            constraintInCol = checkForConstraintInCol(matrixDomaine, j, nbValue);       // Test de contrainte entre la valeur i et toutes les autres
 
-            // Dans le cas où aucun pigeon n'est déjà présent dans la colonne :
-            if( constraintInCol < 0 ){
-                matrixDomaine[i][j] = 1; // Le pigeon i est donc placé dans le nid j
+            if( constraintInCol < 0 ){                                                  // Cas où aucune contrainte est violée
+                matrixDomaine[i][j] = 1;                                                // Incrémentation de la valeur i
 
-                /*
-                    Nous regardons dans une premier temps si il est possible de de passer au pigeon i+1
-                    Dans le cas où sela ne serait pas possible  -> nous sommes arrivés au dernier pigeon
-                                                                -> nous avons réussi à placer tous nos pigeons
-                                                                -> solution alors trouvée
-                    Cas normalement impossible à trouver.
-                */
-                // SOLUTION TROUVEE si i == dernier pigeon
-                if( i == (nbValue-1) ){
-                    //printf("\nSOLUTION TROUVEE :\n");
+                if( i == (nbValue-1) ){                                                 // SOLUTION TROUVEE si i == dernière valeur à incrémenter
+                    resultFound = 1;                                                    // Booleen
+                    push(result, matrixDomaine, nbValue, nbDomaine);                    // Sauvegarde du résultat dans la pile créée à cet effet
 
-                    resultFound = 1;
-                    push(result, matrixDomaine, nbValue, nbDomaine);
-
-                    matrixDomaine = pop_n_time(stack, i, nbValue); // On revient à l'état de la matrice où pigeon 1 à réussi à être placé
-                    matrixDomaine[0][j] = -1;   // ça valeur est mise à -1 pour indiqué qu'on a bien vu cette ligne
-                    i=0;
-                    ++j; // Décalage vers la droite
+                    matrixDomaine = pop_n_time(stack, i, nbValue);                      // Retour à la matrice initiale, où la première valeur à réussi à être incrémentée
+                    matrixDomaine[0][j] = -1;                                           // Pour passer à sa prochaine valeur, nous indiquons -1
+                    i=0;                                                                // Nous revenons à une recherche de domaine possible pour la première valeur
+                    ++j;                                                                // Décalage vers la droite dans notre matrice -> prochaine valeur possible pour i
                     deepestViolatedConstraint = nbValue;
                 }
-                else{
-                    push(stack, matrixDomaine, nbValue, nbDomaine); // Sauvegarde de la matrice dans la pile
+                else{                                                                   // Toutes les valeurs ne sont pas encore incrémentées, on passe donc à la suivante
+                    push(stack, matrixDomaine, nbValue, nbDomaine);                     // Sauvegarde de la matrice dans la pile
                     deepestViolatedConstraint = nbValue;
-                    j=0;
-                    ++i;
+                    j=0;                                                                // Retest de toutes les valeurs possible pour un domaine de i
+                    ++i;                                                                // Décalage vers le bas dans notre matrice
                 }
             }
-            else { // Dans le cas où un pigeon est déjà placé dans la colonne :
-                // Sauvegarde de la contrainte
+            else {                                                                      // Cas où une contrainte est violée ( on s'arrête la première trouvée )
+
                 if( constraintInCol < deepestViolatedConstraint ){
-                    deepestViolatedConstraint = constraintInCol;
+                    deepestViolatedConstraint = constraintInCol;                        // Sauvegarde de la contrainte ( la plus haute ici dans les valeurs )
                 }
-                matrixDomaine[i][j] = -1; // Nous indiquons dans la matrice qu'il n'est pas possible de placer de pigeon à cet endroit
 
-                /* Test pour savoir si tous les nids j pour le pigeon i ont été testés */
-                if( j == (nbDomaine-1) ){
-                    /*
-                        Dans le cas où le pigeon i a testé tous les nids j sans pouvoir trouver de place :
-                            - on test dans un premier temps si nous avons aussi parcourus l'ensemble des pigeons i
-                                -> si c'est le cas, alors on est dans un cas de backjumping, on revient sur la
-                                contrainte violée la plus haute dans l'arbre. ( pop de la pile )
-                                -> sinon, il s'agit d'un simple backtrack, on revient sur la valeur du pigeon i-1
-                    */
-                    if( i == (nbValue-1) ){
-                        // TOUS LES PIGEONS ONT ETE TRAITES
-                        // On revient à l'état de la matrice où la contrainte la plus haute à été violée
-                        // on dépile la pile nbJump fois pour atteindre la contrainte +haute violée
+                matrixDomaine[i][j] = -1;                                               // Impossibilité d'incrémenter, on place -1
+
+                if( j == (nbDomaine-1) ){                                               // Test pour savoir si tous le domaine d'une valeur i a été parcouru
+                    if( i == (nbValue-1) ){                                             // Test pour savoir si i est la dernière de toutes les valeurs
                         int nbJump = (nbValue-1) - deepestViolatedConstraint;
-                        matrixDomaine = pop_n_time(stack, nbJump, nbValue);
+                        matrixDomaine = pop_n_time(stack, nbJump, nbValue);             // On dépile jusqu'à trouver la matrice qui correspond à la plus haute contrainte violée
 
-                        // On récupère l'emplacement du 1 dans le domaine du pigeon qui est en cause de l'echec
                         constraintInRow = checkForConstraintInRow(matrixDomaine, deepestViolatedConstraint, nbDomaine);
-                        i=deepestViolatedConstraint;
+                        i=deepestViolatedConstraint;                                    // On repart de cette valeur qui est en cause de l'échec
                         j=constraintInRow;
-                        matrixDomaine[i][j] = -1;
+                        matrixDomaine[i][j] = -1;                                       // Tout en indiquant que la valeur a été vu
                         deepestViolatedConstraint = nbValue;
                     }
                     else{
-                        matrixDomaine = pop(stack); // On dépile la précédente matrice sauvegardée
+                        matrixDomaine = pop(stack);                                     // On dépile la précédente matrice sauvegardée
                         constraintInRow = checkForConstraintInRow(matrixDomaine, i-1, nbDomaine);
                         matrixDomaine[i-1][constraintInRow] = -1;
-                        --i; // On revient en arrière de 1
+                        --i;                                                            // Retour en arrière de 1
                         deepestViolatedConstraint = nbValue;
                     }
                 }
