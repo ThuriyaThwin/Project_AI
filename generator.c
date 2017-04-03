@@ -38,7 +38,7 @@ void pigeonsGenerator(int nbPigeons){
     } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
 
     int tmp = atoi(c);
-    backjumping(nbPigeons, nbPigeons-1, tmp);
+    backjumpingPigeons(nbPigeons, nbPigeons-1, tmp);
     //forwardChecking(domaines, nbPigeons);
 
 /*
@@ -113,6 +113,18 @@ void pigeonsGenerator(int nbPigeons){
 
 
 // Génération pour le problème des dames
-void checkersGenerator(unsigned long nbCheckers){
+void checkersGenerator(int nbCheckers){
+    if( nbCheckers <= 1 ){
+        fprintf(stderr, "Erreur: nombre de pigeons <= 1\n");
+        return;
+    }
 
+    char c[1];
+    do{
+        printf("Afficher matrice ? 0(Non) - 1(Oui)\n");
+        scanf("%s", c);
+    } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
+
+    int tmp = atoi(c);
+    backjumpingCheckers(nbCheckers, nbCheckers, tmp);
 }

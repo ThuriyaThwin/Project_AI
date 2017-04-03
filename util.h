@@ -31,6 +31,7 @@ void printMatrix(int** matrix, int row, int col);
 void wipeMatrix(int** matrix, int row);
 int checkForConstraintInCol(int** matrix, int number_of_the_col, int nbTotalRow);
 int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol);
+int checkForConstraintInDiagonal(int** matrix, int number_of_the_row, int number_of_the_col, int nbTotalRow, int nbTotalCol);
 
 
 Stack* initStack();

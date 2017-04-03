@@ -185,6 +185,45 @@ int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol)
 }
 
 
+int checkForConstraintInDiagonal(int** matrix, int number_of_the_row, int number_of_the_col, int nbTotalRow, int nbTotalCol){
+    int i=number_of_the_row;
+    int j=number_of_the_col;
+
+    int violatedConstraint = nbTotalRow;
+
+    //recherche dans la diagonale haut-gauche
+    while( i > 0 && j > 0){
+        --i;
+        --j;
+
+        if(matrix[i][j] == 1){
+            if( i < violatedConstraint ){
+                violatedConstraint = i;
+            }
+        }
+    }
+
+    i=number_of_the_row;
+    j=number_of_the_col;
+
+    //recherche diagonale haut-droite
+    while( i > 0 && j < nbTotalCol) {
+        --i;
+        ++j;
+
+        if(matrix[i][j] == 1){
+            if( i < violatedConstraint ){
+                violatedConstraint = i;
+            }
+        }
+    }
+
+    if( violatedConstraint < nbTotalRow )
+        return violatedConstraint;
+    else
+        return -1;
+}
+
 Coords findLastModif(int **domaines, int nbPigeons){
     Coords coords;
     coords.x = -1;
