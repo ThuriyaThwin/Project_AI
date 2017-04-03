@@ -83,7 +83,7 @@ void backjumping(int nbValue, int nbDomaine, int showMatrix){
                     }
                 }
 
-                ++j;
+                ++j;                                                                    // Décalage vers la droite, prochaine valeur de domaine pour la valeur i
             }
             if( showMatrix == 1 ) printMatrix(matrixDomaine, nbValue, nbDomaine);
         }
