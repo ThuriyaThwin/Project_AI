@@ -97,14 +97,25 @@ GESTION MATRICE
 // Affiche une matrice row*col
 void printMatrix(int** matrix, int row, int col){
     int i, j;
-    printf("{\n");
+
+    char str[999999];
+    sprintf(str, "{\n");
+
+    //printf("%s", str);
+
+    //printf("{\n");
     for(i = 0; i < row; ++i){
         for(j = 0; j < col; ++j){
-            printf("[ %d ]", matrix[i][j]);
+            //printf("[ %d ]", matrix[i][j]);
+            sprintf(str, "%s[ %d ]", str, matrix[i][j]);
         }
-        printf("\n");
+        sprintf(str, "%s\n", str);
+        //printf("\n");
     }
-    printf("}\n");
+    sprintf(str, "%s}\n", str);
+
+    printf("%s", str);
+    //printf("}\n");
 }
 
 // Remet à 0 une matrice row*col

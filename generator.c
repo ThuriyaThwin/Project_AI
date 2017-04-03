@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "generator.h"
 #include "solver.h"
 #include "backjumping.h"
 
 // Génération pour le problème des pigeons
 void pigeonsGenerator(int nbPigeons){
-    if( nbPigeons <= 0 ){
-        fprintf(stderr, "Erreur: nombre de pigeons <= 0\n");
+    if( nbPigeons <= 1 ){
+        fprintf(stderr, "Erreur: nombre de pigeons <= 1\n");
         return;
     }
 
@@ -30,7 +31,14 @@ void pigeonsGenerator(int nbPigeons){
         //printf("\n");
     }*/
 
-    backjumping(nbPigeons, nbPigeons-1, 0);
+    char c[1];
+    do{
+        printf("Afficher matrice ? 0(Non) - 1(Oui)\n");
+        scanf("%s", c);
+    } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
+
+    int tmp = atoi(c);
+    backjumping(nbPigeons, nbPigeons-1, tmp);
     //forwardChecking(domaines, nbPigeons);
 
 /*
