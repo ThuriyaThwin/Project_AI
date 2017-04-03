@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "generator.h"
 #include "solver.h"
+#include "backjumping.h"
 
 // Génération pour le problème des pigeons
 void pigeonsGenerator(int nbPigeons){
@@ -10,7 +11,7 @@ void pigeonsGenerator(int nbPigeons){
         return;
     }
 
-    int **domaines;
+    /*int **domaines;
 
     domaines = malloc(nbPigeons * sizeof(int));
     for(int i = 0; i < nbPigeons; ++i){
@@ -23,9 +24,10 @@ void pigeonsGenerator(int nbPigeons){
             //printf("%d", domaines[i][j]);
         }
         //printf("\n");
-    }
+    }*/
 
-    forwardChecking(domaines, nbPigeons);
+    backjumping(nbPigeons, nbPigeons-1, 0);
+    //forwardChecking(domaines, nbPigeons);
 
 /*
     printf("Nombre de pigeons : %d \n", nbPigeons);
