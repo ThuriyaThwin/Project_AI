@@ -18,7 +18,7 @@ void pigeonsGenerator(int nbPigeons){
         scanf("%s", c);
     } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
 
-    int tmp = atoi(c);
+    int affiche = atoi(c);
 
 
     do{
@@ -27,10 +27,9 @@ void pigeonsGenerator(int nbPigeons){
     } while( strcmp(c,"0") != 0 && strcmp(c,"1") != 0 );
 
     if( strcmp(c,"0") == 0 ) {
-        backjumpingPigeons(nbPigeons, nbPigeons - 1, tmp);
+        backjumpingPigeons(nbPigeons, nbPigeons - 1, affiche);
     }
     else {
-        printf("FC");
         int **domaines;
 
         domaines = malloc(nbPigeons * sizeof(int));
@@ -43,7 +42,7 @@ void pigeonsGenerator(int nbPigeons){
                 domaines[i][j] = 0;
             }
         }
-        forwardChecking(domaines, nbPigeons);
+        forwardChecking(domaines, nbPigeons, affiche);
     }
 
 
@@ -82,7 +81,6 @@ void pigeonsGenerator(int nbPigeons){
         }
     }*/
 }
-
 
 // Génération pour le problème des dames
 void checkersGenerator(int nbCheckers){

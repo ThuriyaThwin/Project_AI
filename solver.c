@@ -25,8 +25,7 @@ void clearMatrice(int **domaines, int i,int j, int nbPigeons){
     }
 }
 
-void forwardChecking(int **domaines, int nbPigeons){
-    printf("nb p : %d", nbPigeons);
+void forwardChecking(int **domaines, int nbPigeons, int affiche){
     int nbNids = nbPigeons - 1;
 
     for(int i = 0; i < nbPigeons; ++i){
@@ -34,8 +33,9 @@ void forwardChecking(int **domaines, int nbPigeons){
             int check = checkForConstraintInCol(domaines, j, nbNids);
             if(check == -1){
                 domaines[i][j] = AFFECTE;
-                fillColumns(domaines, i, j, nbPigeons, IMPOSSIBLE);
-                printMat(domaines, nbPigeons);
+                fillColumns(domaines, i+1, j, nbPigeons, IMPOSSIBLE);
+                if(affiche == 1)
+                    printMat(domaines, nbPigeons);
                 break;
             }
             else{
@@ -47,7 +47,8 @@ void forwardChecking(int **domaines, int nbPigeons){
                     }
                     int col = checkForConstraintInRow(domaines, line, nbNids);
                     clearMatrice(domaines, line, col, nbPigeons);
-                    printMat(domaines, nbPigeons);
+                    if(affiche == 1)
+                        printMat(domaines, nbPigeons);
                     i = line;
                     j = col;
                 }

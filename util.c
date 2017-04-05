@@ -162,7 +162,7 @@ int** copyMatrix(int** sourceMatrix, int row, int col){
     return newMatrix;
 }
 
-// Fonction qui a pour but de vérifier si il existe un 1 dans une colonne donnée
+/*// Fonction qui a pour but de vérifier si il existe un 1 dans une colonne donnée
 // Renvoie le numéro de ligne si trouvé
 // Sinon -1
 int checkForConstraintInCol(int** matrix, int number_of_the_col, int nbTotalRow){
@@ -182,7 +182,7 @@ int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol)
             return i;
     }
     return -1;
-}
+}*/
 
 
 int checkForConstraintInDiagonal(int** matrix, int number_of_the_row, int number_of_the_col, int nbTotalRow, int nbTotalCol){
@@ -224,19 +224,26 @@ int checkForConstraintInDiagonal(int** matrix, int number_of_the_row, int number
         return -1;
 }
 
-Coords findLastModif(int **domaines, int nbPigeons){
-    Coords coords;
-    coords.x = -1;
-    coords.y = -1;
-    for(int i = 0; i < nbPigeons; ++i){
-        for(int j = 0; j < nbPigeons - 1; ++j){
-            if(domaines[i][j] == 1){
-                coords.x = i;
-                coords.y = j;
-            }
-        }
+// Fonction qui a pour but de vérifier si il existe un 1 dans une colonne donnée
+// Renvoie le numéro de ligne si trouvé
+// Sinon -1
+int checkForConstraintInCol(int** matrix, int number_of_the_col, int nbTotalRow){
+    for(int i=0; i < nbTotalRow; ++i){
+        if( matrix[i][number_of_the_col] == 1 )
+            return i;
     }
-    return coords;
+    return -1;
+}
+
+// Fonction qui a pour but de vérifier si il existe un 1 dans une ligne donnée
+// Renvoie le numéro de colonne si trouvé
+// Sinon -1
+int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol){
+    for(int i=0; i < nbTotalCol; ++i){
+        if( matrix[number_of_the_row][i] == 1 )
+            return i;
+    }
+    return -1;
 }
 
 void fillColumns(int **domaines, int i, int j, int nbPigeons, int value){
