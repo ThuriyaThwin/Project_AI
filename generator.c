@@ -1,24 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "generator.h"
 #include "solver.h"
-#include "backjumping.h"
 
 // Génération pour le problème des pigeons
 void pigeonsGenerator(int nbPigeons){
-    if( nbPigeons <= 1 ){
-        fprintf(stderr, "Erreur: nombre de pigeons <= 1\n");
+    if( nbPigeons <= 0 ){
+        fprintf(stderr, "Erreur: nombre de pigeons <= 0\n");
         return;
     }
 
-    /*
-
-    // SECTION USELESS, UTILISER LE UTIL.C pour créer matrice
-    // Le faire directement dans le forwardChecking ...
     int **domaines;
 
-    domaines = malloc(nbPigeons * sizeof(*int));
+    domaines = malloc(nbPigeons * sizeof(int));
     for(int i = 0; i < nbPigeons; ++i){
         domaines[i] = malloc((nbPigeons - 1) * sizeof(int));
     }
@@ -29,17 +23,9 @@ void pigeonsGenerator(int nbPigeons){
             //printf("%d", domaines[i][j]);
         }
         //printf("\n");
-    }*/
+    }
 
-    char c[1];
-    do{
-        printf("Afficher matrice ? 0(Non) - 1(Oui)\n");
-        scanf("%s", c);
-    } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
-
-    int tmp = atoi(c);
-    backjumpingPigeons(nbPigeons, nbPigeons-1, tmp);
-    //forwardChecking(domaines, nbPigeons);
+    forwardChecking(domaines, nbPigeons);
 
 /*
     printf("Nombre de pigeons : %d \n", nbPigeons);
@@ -113,18 +99,6 @@ void pigeonsGenerator(int nbPigeons){
 
 
 // Génération pour le problème des dames
-void checkersGenerator(int nbCheckers){
-    if( nbCheckers <= 1 ){
-        fprintf(stderr, "Erreur: nombre de pigeons <= 1\n");
-        return;
-    }
+void checkersGenerator(unsigned long nbCheckers){
 
-    char c[1];
-    do{
-        printf("Afficher matrice ? 0(Non) - 1(Oui)\n");
-        scanf("%s", c);
-    } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
-
-    int tmp = atoi(c);
-    backjumpingCheckers(nbCheckers, nbCheckers, tmp);
 }

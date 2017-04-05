@@ -97,19 +97,14 @@ GESTION MATRICE
 // Affiche une matrice row*col
 void printMatrix(int** matrix, int row, int col){
     int i, j;
-
-    char str[999999];
-    sprintf(str, "{\n");
-
+    printf("{\n");
     for(i = 0; i < row; ++i){
         for(j = 0; j < col; ++j){
-            sprintf(str, "%s[ %d ]", str, matrix[i][j]);
+            printf("[ %d ]", matrix[i][j]);
         }
-        sprintf(str, "%s\n", str);
+        printf("\n");
     }
-    sprintf(str, "%s}\n", str);
-
-    printf("%s", str);
+    printf("}\n");
 }
 
 // Remet à 0 une matrice row*col
@@ -184,45 +179,6 @@ int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol)
     return -1;
 }
 
-
-int checkForConstraintInDiagonal(int** matrix, int number_of_the_row, int number_of_the_col, int nbTotalRow, int nbTotalCol){
-    int i=number_of_the_row;
-    int j=number_of_the_col;
-
-    int violatedConstraint = nbTotalRow;
-
-    //recherche dans la diagonale haut-gauche
-    while( i > 0 && j > 0){
-        --i;
-        --j;
-
-        if(matrix[i][j] == 1){
-            if( i < violatedConstraint ){
-                violatedConstraint = i;
-            }
-        }
-    }
-
-    i=number_of_the_row;
-    j=number_of_the_col;
-
-    //recherche diagonale haut-droite
-    while( i > 0 && j < nbTotalCol) {
-        --i;
-        ++j;
-
-        if(matrix[i][j] == 1){
-            if( i < violatedConstraint ){
-                violatedConstraint = i;
-            }
-        }
-    }
-
-    if( violatedConstraint < nbTotalRow )
-        return violatedConstraint;
-    else
-        return -1;
-}
 
 Coords findLastModif(int **domaines, int nbPigeons){
     Coords coords;

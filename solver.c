@@ -7,18 +7,6 @@
 #define VIDE 0
 #define AFFECTE 1
 
-int **domainesPrecedents;
-
-void initDomainesPrecedents(int nbPigeons){
-    domainesPrecedents = malloc(nbPigeons * sizeof(int));
-    for(int i = 0; i < nbPigeons; ++i)
-        domainesPrecedents[i] = malloc((nbPigeons - 1) * sizeof(int));
-
-    for(int i = 0; i < nbPigeons; ++i)
-        for(int j = 0; j < nbPigeons - 1; ++j)
-            domainesPrecedents[i][j] = 0;
-}
-
 void printMat(int **domaines, int nbPigeons){
     printf("----------DOMAINES-----------\n");
     for(int i = 0; i < nbPigeons; ++i){
@@ -29,43 +17,44 @@ void printMat(int **domaines, int nbPigeons){
     }
 }
 
-/*void matricecopy (int **domaines, int nbPigeons) {
-    for(int i = 0; i < nbPigeons; ++i){
-        for(int j = 0; j < nbPigeons - 1; ++j){
-            domainesPrecedents[i][j] = domaines[i][j];
-            //printf("%d", domaines[i][j]);
+void clearMatrice(int **domaines, int i,int j, int nbPigeons){
+    for(int k = i; k < nbPigeons; ++k){
+        for (int l = j; l < nbPigeons -1; ++l) {
+            domaines[k][l] = VIDE;
         }
-        //printf("\n");
     }
-}*/
+}
 
 void forwardChecking(int **domaines, int nbPigeons){
-    initDomainesPrecedents(nbPigeons);
+    Stack* stack = initStack();
+
+    int nbNids = nbPigeons - 1;
+
     for(int i = 0; i < nbPigeons; ++i){
-        for(int j = 0; j < nbPigeons - 1; ++j){
-            printMat(domaines, nbPigeons);
-            while (domaines[i][j] == IMPOSSIBLE && j == (nbPigeons - 2)){
-                --i;
-                if(domaines[i][j] == AFFECTE){
-                    fillColumns(domaines, i, j, nbPigeons, VIDE);
-                    --i;
-                    --j;
-                    fillColumns(domaines, i, j, nbPigeons, VIDE);
-                    printMat(domaines, nbPigeons);
-                    printf("i = %d, j = %d", i, j);
-                    ++j;
-                }
-            }
-            if(domaines[i][j] == VIDE) {
-                //matricecopy(domaines, nbPigeons);
+        for(int j = 0; j < nbNids; ++j){
+            int check = checkForConstraintInCol(domaines, j, nbNids);
+            if(check == -1){
                 domaines[i][j] = AFFECTE;
-                fillColumns(domaines, i + 1, j, nbPigeons, IMPOSSIBLE);
+                fillColumns(domaines, i, j, nbPigeons, IMPOSSIBLE);
+                //printMat(domaines, nbPigeons);
                 break;
+            }
+            else{
+                if(j == (nbNids -1)){
+                    int line = checkForConstraintInCol(domaines, j, nbPigeons) - 1;
+                    if(line == -1){
+                        printf("Pas de solutions\n");
+                        return;
+                    }
+                    int col = checkForConstraintInRow(domaines, line, nbNids);
+                    clearMatrice(domaines, line, col, nbPigeons);
+
+                    //printMat(domaines, nbPigeons);
+                    i = line;
+                    j = col;
+                }
             }
         }
     }
 
-    /*int x = findLastModif(domainesPrecedents, nbPigeons).x;
-    int y = findLastModif(domainesPrecedents, nbPigeons).y;
-    printf("Last 1 : x = %d, y = %d", x, y);*/
 }
