@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <malloc.h>
 #include "util.h"
 #include "solver.h"
 
@@ -55,5 +54,4 @@ void forwardChecking(int **domaines, int nbPigeons, int affiche){
             }
         }
     }
-
 }

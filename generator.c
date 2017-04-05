@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "generator.h"
 #include "solver.h"
 #include "backjumping.h"
@@ -42,7 +43,12 @@ void pigeonsGenerator(int nbPigeons){
                 domaines[i][j] = 0;
             }
         }
+        printf("Init BackJumping avec %d valeur & %d domaine.\n", nbPigeons, nbPigeons-1);
+        clock_t begin = clock();                                                            // Démarrage du compteur de temps
         forwardChecking(domaines, nbPigeons, affiche);
+        clock_t end = clock();
+        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+        printf("TEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
     }
 
 
