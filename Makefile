@@ -2,7 +2,7 @@ CC = gcc
 
 CCFLAGS = -Wall
 
-OBJ = util.o generator.o backjumping.o
+OBJ = util.o generator.o backjumping.o solver.o
 
 all: main
 
@@ -18,6 +18,8 @@ generator.o: generator.c
 backjumping.o: backjumping.c
 	$(CC) $(CCFLAGS) -c backjumping.c
 
+solver.o: solver.c
+	$(CC) $(CCFLAGS) -c solver.c
 
 
 .PHONY : clean

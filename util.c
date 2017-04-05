@@ -18,6 +18,26 @@ Stack* initStack(){
     return stack;
 }
 
+StackV2* initStackV2(){
+    StackV2* stack = malloc(sizeof( *stack ));
+    stack->top = NULL;
+
+    return stack;
+}
+
+
+void pushV2(StackV2* stack, int* tab, int row){
+    NodeV2* newTop = malloc( sizeof( *newTop ));
+    if( stack == NULL || newTop == NULL ){
+        printf("Erreur : stack or newTop NULL.\n");
+        exit(-1);
+    }
+
+    newTop->tab = copyTab(tab, row);
+    newTop->next = stack->top;
+    stack->top = newTop;
+}
+
 // Ajout d'une sauvegarde de matrice dans la Pile
 // IMPORTANT : Copie par Valeur faite automatiquement lors du push (on duplique la matrice actuelle | 2 pointeurs)
 //                          ^-----> void createNewMatrice(int** matrix);
@@ -33,8 +53,26 @@ void push(Stack* stack, int** matrix, int row, int col){
     stack->top = newTop;
 }
 
+
+int* popV2(StackV2* stack){
+    int* tmpTab;
+
+    if( stack->top != NULL ){
+        tmpTab = stack->top->tab;
+        NodeV2* node = stack->top;
+        stack->top = stack->top->next;
+        free(node);
+    }
+    else{
+        printf("Erreur : top NULL.\n");
+        exit(-1);
+    }
+
+    return tmpTab;
+}
+
 // Retirement du premier élément de la Pile
-// Renvoie une matricer
+// Renvoie une matrice
 int** pop(Stack* stack){
     if( stack == NULL ){
         printf("Erreur : stack NULL.\n");
@@ -65,6 +103,17 @@ int** pop_n_time(Stack* stack, int nTime, int row){
     return pop(stack);
 }
 
+void wipeStackV2(StackV2* stack, int row){
+    while( stack->top != NULL){
+        free(stack->top->tab);
+        NodeV2* top = stack->top;
+        stack->top = stack->top->next;
+        free(top);
+    }
+
+    free(stack);
+}
+
 // Suppression et libération de mémoire pour toutes les matrices contenues dans la pile
 // Suppression de libération de mémoire de la pile
 void wipeStack(Stack* stack, int row){
@@ -93,6 +142,21 @@ void printAllStack(Stack* stack, int row, int col){
 /*
 GESTION MATRICE
 */
+void printTab(int* tab, int row){
+    int i;
+
+    char str[999999];
+    sprintf(str, "{\n");
+    for(i=0; i < row; ++i){
+        sprintf(str, "%s %d", str, tab[i]);
+        if( i < row-1 )
+            sprintf(str, "%s,", str);
+    }
+    sprintf(str, "%s }\n", str);
+
+    printf("%s", str);
+}
+
 
 // Affiche une matrice row*col
 void printMatrix(int** matrix, int row, int col){
@@ -121,12 +185,16 @@ void resetMatrix(int** matrix, int row, int col){
     }
 }
 
+int* createNewTab(int nbElement){
+    return malloc( nbElement * sizeof(int) );
+}
+
 // Créer une nouvelle matrice row*col
 int** createNewMatrix(int row, int col){
     int** newMatrix = malloc( row * sizeof(int*));
     if(newMatrix != NULL){
         for(int i = 0; i < row; ++i){
-            newMatrix[i] = malloc( col * sizeof(int) );
+            newMatrix[i] = createNewTab(col);
             if( (newMatrix[i] == NULL) ){
                 printf("Erreur : newMatrice[%d] NULL.\n", i);
                 exit(-1);
@@ -149,6 +217,14 @@ void wipeMatrix(int** matrix, int row){
     free( matrix); // Libération première dimension
 }
 
+int* copyTab(int* tab, int nbElement){
+    int* newTab = createNewTab(nbElement);
+    for(int i=0; i < nbElement; ++i){
+        newTab[i] = tab[i];
+    }
+
+    return newTab;
+}
 // Copie par valeur d'une matice row*col vers une nouvelle row*col
 int** copyMatrix(int** sourceMatrix, int row, int col){
     int** newMatrix;

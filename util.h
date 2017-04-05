@@ -1,6 +1,16 @@
 #ifndef PROJET_IA_UTIL_H
 #define PROJET_IA_UTIL_H
 
+// Structure pour la deuxième implémentation
+typedef struct NodeV2{
+    int* tab;
+    struct NodeV2* next;
+} NodeV2;
+
+typedef struct StackV2{
+    struct NodeV2* top;
+} StackV2;
+
 
 // Structure représentant une Pile de Matrice
 // Les éléments contenue dans la pile, chacun connaît son prédecesseur dans la Pile
@@ -24,11 +34,16 @@ struct Coords{
 struct Coords findLastModif(int **domaines, int nbPigeons);
 void fillColumns(int **domaines, int i, int j, int nbPigeons, int value);
 
+int* createNewTab(int nbElement);
+int* copyTab(int* tab, int nbElement);
+void printTab(int* tab, int row);
+
 int** createNewMatrix(int row, int col);
 int** copyMatrix(int** sourceMatrix, int row, int col);
 void resetMatrix(int** matrix, int row, int col);
 void printMatrix(int** matrix, int row, int col);
 void wipeMatrix(int** matrix, int row);
+
 int checkForConstraintInCol(int** matrix, int number_of_the_col, int nbTotalRow);
 int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol);
 int checkForConstraintInDiagonal(int** matrix, int number_of_the_row, int number_of_the_col, int nbTotalRow, int nbTotalCol);
