@@ -28,8 +28,7 @@ void pigeonsGenerator(int nbPigeons){
     } while( strcmp(c,"0") != 0 && strcmp(c,"1") != 0 );
 
     if( strcmp(c,"0") == 0 ) {
-        //backjumpingPigeons(nbPigeons, nbPigeons - 1, affiche);
-        backjumpingV2(nbPigeons, nbPigeons-1, affiche, 0);
+        backjumpingPigeons(nbPigeons, nbPigeons - 1, affiche);
     }
     else {
         int **domaines;
@@ -44,9 +43,9 @@ void pigeonsGenerator(int nbPigeons){
                 domaines[i][j] = 0;
             }
         }
-        printf("Init BackJumping avec %d valeur & %d domaine.\n", nbPigeons, nbPigeons-1);
+        printf("Init Forward Checking avec %d valeur & %d domaine.\n", nbPigeons, nbPigeons-1);
         clock_t begin = clock();                                                            // Démarrage du compteur de temps
-        forwardChecking(domaines, nbPigeons, affiche);
+        forwardCheckingPigeons(domaines, nbPigeons, affiche);
         clock_t end = clock();
         double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
         printf("TEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
@@ -102,8 +101,6 @@ void checkersGenerator(int nbCheckers){
         scanf("%s", c);
     } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
 
-    int affiche = atoi(c);
-    
-    backjumpingV2(nbCheckers, nbCheckers, affiche, 1);
-    //backjumpingCheckers(nbCheckers, nbCheckers, tmp);
+    int tmp = atoi(c);
+    backjumpingCheckers(nbCheckers, nbCheckers, tmp);
 }

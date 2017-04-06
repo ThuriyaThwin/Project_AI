@@ -409,3 +409,57 @@ void fillColumns(int **domaines, int i, int j, int nbPigeons, int value){
     for(int k = i; k < nbPigeons; ++k)
         domaines[k][j] = value;
 }
+
+void fillDiagonal(int **domaines, int i, int j, int nbPigeons, int value){
+    for(int k = i; k < nbPigeons; ++k) {
+        domaines[k][k] = value;
+        domaines[k][-(i-k)] = value;
+    }
+}
+
+// Fonction d'initialisation de la Pile
+Pile* initPile(){
+    Pile* stack = malloc(sizeof( *stack ));
+    stack->top = NULL;
+
+    return stack;
+}
+
+// Ajout d'une sauvegarde de matrice dans la Pile
+// IMPORTANT : Copie par Valeur faite automatiquement lors du push (on duplique la matrice actuelle | 2 pointeurs)
+//                          ^-----> void createNewMatrice(int** matrix);
+void pushPile(Pile* stack, int value){
+    Noeud* newTop = malloc(sizeof( *newTop ));
+    if( stack == NULL || newTop == NULL ){
+        printf("Erreur : stack or newTop NULL.\n");
+        exit(-1);
+    }
+
+    newTop->pos = value;
+    newTop->next = stack->top;
+    stack->top = newTop;
+}
+
+// Retirement du premier élément de la Pile
+// Renvoie une matricer
+int popPile(Pile* stack){
+    if( stack == NULL ){
+        printf("Erreur : stack NULL.\n");
+        exit(-1);
+    }
+
+    int pos;
+
+    if( stack->top != NULL ){
+        pos = stack->top->pos;
+        Noeud* node = stack->top;
+        stack->top = stack->top->next;
+        free(node); // Libération du noeud qui n'est plus utilisé.
+    }
+    else{
+        printf("Erreur : top NULL.\n");
+        exit(-1);
+    }
+
+    return pos;
+}

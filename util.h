@@ -24,15 +24,19 @@ typedef struct Stack{
     struct Node* top;
 } Stack;
 
+typedef struct Noeud{
+    int pos;
+    struct Noeud* next;
+} Noeud;
 
-typedef struct Coords Coords;
-struct Coords{
-    int x;
-    int y;
-};
+// La pile elle pointe toujours sur le premier élément : Top
+typedef struct Pile{
+    struct Noeud* top;
+} Pile;
 
 struct Coords findLastModif(int **domaines, int nbPigeons);
 void fillColumns(int **domaines, int i, int j, int nbPigeons, int value);
+void fillDiagonal(int **domaines, int i, int j, int nbPigeons, int value);
 
 int* createNewTab(int nbElement);
 int* copyTab(int* tab, int nbElement);
@@ -70,5 +74,8 @@ void pushV2(StackV2* stack, int* tab, int row);
 void printAllStack(Stack* stack, int row, int col);
 void printAllStackV2(StackV2* stack, int row);
 
+Pile *initPile();
+int popPile(Pile *pile);
+void pushPile(Pile *pile, int value);
 
 #endif //PROJET_IA_UTIL_H

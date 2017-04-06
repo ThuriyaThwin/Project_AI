@@ -5,6 +5,8 @@
 #ifndef PROJET_IA_SOLVER_H
 #define PROJET_IA_SOLVER_H
 
-void forwardChecking(int **domaines, int nbPigeons, int affiche);
+void forwardCheckingPigeons(int **domaines, int nbPigeons, int affiche);
+void forwardCheckingCheckers(int **domaines, int nbCheckers, int affiche);
+void forwardCheckingCheckersUneSolution(int **domaines, int nbCheckers, int affiche);
 
 #endif //PROJET_IA_SOLVER_H
