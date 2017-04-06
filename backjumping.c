@@ -9,6 +9,102 @@
     gcc -Wall -o backjumping backjumping.c
 */
 
+void backjumpingV2(int nbValue, int nbDomaine, int show, int setUp){
+
+    printf("Init BackJumping avec %d valeur & %d domaine.\n", nbValue, nbDomaine);
+    int* tabDomaine = createNewTab(nbValue);    // Tableau de nValue, toutes les positions à 0
+    StackV2* stack = initStackV2();
+    StackV2* result = initStackV2();
+
+    int indexTab = 0;
+    int resultFound = 0;
+    int deepestViolatedConstraint = nbValue;
+    int constraint;
+
+    clock_t begin = clock();
+
+    //resetTab(tabDomaine, nbValue);
+    tabDomaine[0] = 0;
+
+    while( tabDomaine[0] < nbDomaine ){
+
+        if( show == 1 ) printTab(tabDomaine, nbValue);
+
+        constraint = checkForConstraintV2(tabDomaine, tabDomaine[indexTab], indexTab, nbValue, nbDomaine, setUp);
+
+        // Si aucune contrainte :
+        if( constraint < 0 ){
+
+            if( indexTab == (nbValue-1) ){
+
+                ++resultFound;
+                pushV2(result, tabDomaine, nbValue);                    // Sauvegarde du résultat
+
+                if( tabDomaine[indexTab - 1] == (nbDomaine-1) ){
+                    tabDomaine = popV2(stack);
+                    --indexTab;
+                    ++tabDomaine[indexTab];
+                }
+                else{
+                    // On essaie la prochaine valeur quand même
+                    ++tabDomaine[indexTab];
+                }
+            }
+            else{
+                pushV2(stack, tabDomaine, nbValue);
+                ++indexTab;
+                tabDomaine[indexTab] = 0;
+            }
+        }
+
+        // Si il existe bien une contrainte :
+        else{
+            // Sauvegarde de la contrainte la plus profonde dans l'arbre
+            if( constraint != -1 && constraint < deepestViolatedConstraint )
+                deepestViolatedConstraint = constraint;
+
+            // Tous les emplacements possible pour la valeur indexTab ont été parcourus
+            if( tabDomaine[indexTab] == (nbDomaine-1) ){
+                // La dernière valeur possible a été parcouru dans son ensemble, aucune solution ici, retour sur la variable en cause de l'echec
+                if( indexTab == (nbValue-1) ){
+                    tabDomaine = popV2_n_time(stack, indexTab); // pop() de la pile nfois, jusqu'à trouver le tableau sur lequel nous étions lors de l'echec le plus profond
+                    indexTab = (nbValue-1) - indexTab; // l'index du tableau reprend la bonne position
+                    ++tabDomaine[indexTab]; // Dans ce tabeau dépilé, nous décallons vers la droite la valeur de la variable à l'indexTab
+                }
+                else{
+                    // Un simple backtrack ici
+                    tabDomaine = popV2(stack);
+                    --indexTab;
+                    ++tabDomaine[indexTab];
+                }
+
+                deepestViolatedConstraint = nbValue; // remise à 0 des contraintes
+            }
+            else{
+                ++tabDomaine[indexTab];
+            }
+        }
+    }
+
+    clock_t end = clock();
+
+    if( resultFound > 0 ){
+        printf("SOLUTION(S) TROUVEE(S):\n");
+        printAllStackV2(result, nbValue);
+    }
+    else
+        printf("0 SOLUTIONS POUR %d PIGEONS\n", nbValue);
+
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("TEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
+
+    // Libération de mémoire
+    wipeStackV2(stack, nbValue);
+    wipeStackV2(result, nbValue);
+}
+
+
+
 void backjumpingPigeons(int nbValue, int nbDomaine, int showMatrix){
 
     printf("Init BackJumping avec %d valeur & %d domaine.\n", nbValue, nbDomaine);

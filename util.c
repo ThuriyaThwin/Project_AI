@@ -95,6 +95,14 @@ int** pop(Stack* stack){
     return tmpMatrice;
 }
 
+int* popV2_n_time(StackV2* stack, int nTime){
+    for(int i=0; i < nTime-1; ++i){
+        free(popV2(stack));
+    }
+
+    return popV2(stack);
+}
+
 int** pop_n_time(Stack* stack, int nTime, int row){
     for(int i=0; i < nTime-1; ++i){
         wipeMatrix(pop(stack), row);
@@ -105,7 +113,7 @@ int** pop_n_time(Stack* stack, int nTime, int row){
 
 void wipeStackV2(StackV2* stack, int row){
     while( stack->top != NULL){
-        free(stack->top->tab);
+        free(stack->top->tab); // Libération du tableau de int
         NodeV2* top = stack->top;
         stack->top = stack->top->next;
         free(top);
@@ -127,6 +135,17 @@ void wipeStack(Stack* stack, int row){
     free(stack); // Libération de la pile
 }
 
+void printAllStackV2(StackV2* stack, int row){
+    NodeV2* index = stack->top;
+
+    printf("-- AFFICHAGE PILE MATRICE --\n");
+    while( index != NULL ){
+        printTab(index->tab, row);
+        index = index->next;
+    }
+    printf("-- FOND DE PILE --\n");
+}
+
 // Affiche toutes les matrices stockées dans la pile
 void printAllStack(Stack* stack, int row, int col){
     Node* index = stack->top;
@@ -146,7 +165,7 @@ void printTab(int* tab, int row){
     int i;
 
     char str[999999];
-    sprintf(str, "{\n");
+    sprintf(str, "{");
     for(i=0; i < row; ++i){
         sprintf(str, "%s %d", str, tab[i]);
         if( i < row-1 )
@@ -174,6 +193,11 @@ void printMatrix(int** matrix, int row, int col){
     sprintf(str, "%s}\n", str);
 
     printf("%s", str);
+}
+
+void resetTab(int* tab, int row){
+    for(int i=0; i < row; ++i)
+        tab[i] = - 1;
 }
 
 // Remet à 0 une matrice row*col
@@ -299,6 +323,65 @@ int checkForConstraintInDiagonal(int** matrix, int number_of_the_row, int number
     else
         return -1;
 }
+
+
+int checkForConstraintV2(int* tab, int value, int positionOfValue, int nbTotalRow, int nbTotalCol, int setUp){
+    int constraintID = nbTotalRow;
+
+    for(int i=0; i < positionOfValue; ++i){
+        if( tab[i] == value ){
+            constraintID = i;
+            break;
+        }
+    }
+
+    // Application de contraintes supplémentaires pour les reines :
+    if( setUp == 1 ){
+
+        printf("Check Constraint Diagonale !\n");
+
+        // Décalage Gauche :
+        int decalage = value;
+        int index = positionOfValue;
+
+        while( index > 0 && decalage > 0 ){
+            --decalage;
+            --index;
+
+            printf("tab(%i) = %d == %d ?\n", index, tab[index], decalage);
+
+            if( tab[index] == decalage ){
+                if( index < constraintID ){
+                    constraintID = index;
+
+                    printf("HG %d\n", constraintID);
+                }
+            }
+        }
+
+        index = positionOfValue;
+        decalage = value;
+
+        while( index > 0 && decalage < nbTotalCol){
+            ++decalage;
+            --index;
+
+            if( tab[index] == decalage ){
+                if( index < constraintID ){
+                    constraintID = index;
+
+                    printf("HD %d\n", constraintID);
+                }
+            }
+        }
+    }
+
+    if( constraintID == nbTotalRow )
+        return -1;
+
+    return constraintID;
+}
+
 
 // Fonction qui a pour but de vérifier si il existe un 1 dans une colonne donnée
 // Renvoie le numéro de ligne si trouvé

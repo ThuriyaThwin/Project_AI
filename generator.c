@@ -28,7 +28,8 @@ void pigeonsGenerator(int nbPigeons){
     } while( strcmp(c,"0") != 0 && strcmp(c,"1") != 0 );
 
     if( strcmp(c,"0") == 0 ) {
-        backjumpingPigeons(nbPigeons, nbPigeons - 1, affiche);
+        //backjumpingPigeons(nbPigeons, nbPigeons - 1, affiche);
+        backjumpingV2(nbPigeons, nbPigeons-1, affiche, 0);
     }
     else {
         int **domaines;
@@ -101,6 +102,8 @@ void checkersGenerator(int nbCheckers){
         scanf("%s", c);
     } while( strcmp(c,"1") != 0 && strcmp(c,"0") != 0 );
 
-    int tmp = atoi(c);
-    backjumpingCheckers(nbCheckers, nbCheckers, tmp);
+    int affiche = atoi(c);
+    
+    backjumpingV2(nbCheckers, nbCheckers, affiche, 1);
+    //backjumpingCheckers(nbCheckers, nbCheckers, tmp);
 }
