@@ -39,13 +39,13 @@
 
     matrixValue = {
 
-                | val0  | val1              <----- valeur de notre pigeon0 par exemple
+                | val0  | val1              <----- valeur de notre pigeon1
         -----------------------
         val0    |   0   |   1
         -----------------------
         val1    |   1   |   0
 
-        ^^^-------------------------- valeur de notre pigeon1 par exemple
+        ^^^-------------------------- valeur de notre pigeon0
 
     };
 
@@ -55,6 +55,7 @@
     int**** matrixConstraint;
 
     matrixConstraint[0][1] = matrixValue;
+        -> traduction : contrainte entre 0 & 1 à pour tuples permis le tableau matrixValue.
 
     accéder aux tuples de la contrainte C( 0, 1 ) :
         matrixConstraint[0][1][0][0] == 0;
@@ -66,7 +67,7 @@
     Maintenant, lors de nos déplacements dans notre matrice de domaine grâce à nos différentres algorithmes il est possible d'effectuer l'opération suivante :
 
     " y a-t-il une contrainte entre le pigeon0 et le pigeon 1 ? "
-        Si l'adresse matrixDomain[0][1] != NULL
+        Si l'adresse matrixConstraint[0][1] != NULL
         Alors
             Nous regardons la valeur de pigeon0 et de pigeon1
             -> càd regarder dans la matrice de domaine quel est l'index de la colonne que la ligne 0 à mis à 1, et de même pour la ligne 1.
