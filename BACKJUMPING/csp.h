@@ -31,11 +31,8 @@
     Pigeon 2 -> var1 ;
     Pigeon 3 -> var2 ;
 
-    Notre tableau est donc à deux dimensions -> int**
-    Et dans chacune des cases de notre tableau nous avons un pointeur vers un autre tableau -> int***
-
-    A une case [i][j] nous pouvons donc associer soit NULL, soit un pointeur vers la première case d'un autre tableau à deux dimensions : *tableau
-    pas de contrainte entre les deux variables <------^^^^               ^^^^^^-------> contrainte existe entre ces deux variables
+    A une case [i][j] nous pouvons donc associer soit NULL, soit un nouveau tableau à deux dimensions.
+    pas de contrainte entre les deux variables <------^^^^              ^^^^^^-------> contrainte existe entre ces deux variables
 
     Notre tableau à deux dimensions d'entier représente les tuples ( couple de valeur ) que peuvent prendre deux variables soumises à une contrainte.
     Dans notre exemple :
@@ -54,16 +51,16 @@
 
     Pour accéder à une valeur de notre tableau de tuples pour la contrainte entre variable0 et variable1 :
 
-    matrixConstraint[0][1] = *matrixValue;
-    puis : *( matrixConstraint[0][1] ) + (indexDim1 * nbElementDim1) + indexDim2
+    int** matrixValue;
+    int**** matrixConstraint;
 
-    exemple :
-        matrixValue[0][0] == *(matrixConstraint[0][1]) + 0 * 2 + 0 --> renvoie 0
-        matrixValue[0][1] == *(matrixConstraint[0][1]) + 0 * 2 + 1 --> renvoie 1
-        matrixValue[0][2] == *(matrixConstraint[0][1]) + 0 * 2 + 2 --> erreur ici
-        matrixValue[1][0] == *(matrixConstraint[0][1]) + 1 * 2 + 0 --> renvoie 1
-        matrixValue[1][1] == *(matrixConstraint[0][1]) + 1 * 2 + 1 --> renvoie 0
+    matrixConstraint[0][1] = matrixValue;
 
+    accéder aux tuples de la contrainte C( 0, 1 ) :
+        matrixConstraint[0][1][0][0] == 0;
+        matrixConstraint[0][1][0][1] == 1;
+        matrixConstraint[0][1][1][0] == 1;
+        matrixConstraint[0][1][1][1] == 0;
 
 
     Maintenant, lors de nos déplacements dans notre matrice de domaine grâce à nos différentres algorithmes il est possible d'effectuer l'opération suivante :
@@ -75,7 +72,7 @@
             -> càd regarder dans la matrice de domaine quel est l'index de la colonne que la ligne 0 à mis à 1, et de même pour la ligne 1.
             Une fois ces deux index récupérés, nous pouvons parcourir l'ensemble des tuples autorisés par la contrainte.
 
-            --> Si les deux index situés dans le domaine ne sont pas trouvés dans les tuples
+            --> Si les deux index situés dans le domaine ne sont pas trouvés dans les tuples :
 
             imagions :
 
@@ -84,9 +81,9 @@
 
                                 | val0  | val1
                         ------------------------
-                        var0    | 1     | 0
+                        var0    | 1     | 0                 <----- domaine0
                         ------------------------
-                        var1    | 1     | 0
+                        var1    | 1     | 0                 <----- domaine1
                         ------------------------
                         var2    | 0     | 0
             };
@@ -97,40 +94,28 @@
             domaine0 = 0;
             domaine1 = 0;
 
-            le tuple (0,0) ==  *(matrixConstraint[0][1]) + 0 * 2 + 0 --> renvoie 0, donc non possible, contrainte violée !
-                                     index domain0  ------^^^      ^^^------- index domaine1
-
-
-
-    Tout ceci correspond notre fichier .txt à :
-
-    X
-    0 1 2
-    D
-    d0 = 0 1
-    d1 = 0 1
-    d2 = 0 1
-    C
-    (0, 1)
-    0 1
-    1 0
-    (0, 2)
-    0 1
-    1 0
-    (1, 2)
-    0 1
-    1 0
-
+            le tuple (0,0) ==  matrixConstraint[0][1][0][0] --> renvoie 0, donc non possible, contrainte violée !
+                                index domain0  ------^^  ^^------- index domaine1
 */
 
 
 typedef struct CSP {
-    int*** matrixConstraint;
+    int**** matrixConstraint;
     int** matrixDomain;
 } CSP;
 
 CSP* initCSP(int nbVariable, int nbValue);
 void freeCSP(CSP* csp, int nbVariable, int nbValue);
 void printCSP(CSP* csp, int nbVariable, int nbValue);
+
+int* newTab(int nbElement);
+int** newMatrix(int lenDimOne, int lenDimTwo);
+int**** newConstraintMatrix(int nbElement);
+
+void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleElement);
+void freeMatrix(int** matrix, int lenDimOne);
+void printTab(int* tab, int nbElement);
+void printMatrix(int** matrix, int lenDimOne, int lenDimTwo);
+
 
 #endif //CSP_H

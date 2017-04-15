@@ -28,15 +28,18 @@ CSP* pigeonGenerator(int nbPigeon, int nbNest){
     //Lignes contraintes C
     sprintf(buffer, "%sC\n", buffer);
     for(int i=0; i < nbPigeon; ++i){
-        for(int j= i+1; j < nbPigeon; ++j){
+        for(int j=0; j < nbPigeon; ++j){
             if(i == j) continue;
-            sprintf(buffer, "%s(%d, %d)\n", buffer, i , j);
+            sprintf(buffer, "%s(%d, %d)\n", buffer, i, j);
 
             //Lignes tuples permis
+            newCSP->matrixConstraint[i][j] = newMatrix(nbNest, nbNest);
             for(int k = 0; k < nbNest; ++k)
                 for(int l = 0; l < nbNest; ++l) {
                     if(k == l) continue;
+
                     sprintf(buffer, "%s%d %d\n", buffer, k, l);
+                    newCSP->matrixConstraint[i][j][k][l] = 1;
                 }
         }
     }

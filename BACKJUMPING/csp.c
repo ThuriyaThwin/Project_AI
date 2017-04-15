@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "csp.h"
-#include "matrixtools.h"
 
 /*
     @param : nombre de variable dans notre problème
@@ -14,36 +13,10 @@ CSP* initCSP(int nbVariable, int nbValue){
     // Allocation de notre structure CSP
     CSP* newCSP = malloc(sizeof( *newCSP ));
 
-    int** mat = newMatrix(2, 2);
-    mat[0][0] = 0;
-    mat[0][1] = 1;
-    mat[1][0] = 1;
-    mat[1][1] = 0;
+    // Allocation Contraintes
+    newCSP->matrixConstraint = newConstraintMatrix(nbVariable);
 
-    // Allocation des différentes matrices contenues dans notre CSP
-    newCSP->matrixConstraint = malloc( nbVariable * sizeof(int**) );
-    for(int i=0; i < nbVariable; ++i){
-        newCSP->matrixConstraint[i] = malloc( nbVariable * sizeof(int*) );
-
-        for(int j=0; j < nbVariable; ++j){
-            newCSP->matrixConstraint[i][j] = NULL ; // Fonctionne
-            newCSP->matrixConstraint[i][j] = *mat ; // Fonctionne
-
-            // AFFICHAGE DEBUG :
-            printf("{\n");
-            for(int k=0; k < 2; ++k){
-                for(int l=0; l < 2; ++l){
-                    printf("[%d]", *(newCSP->matrixConstraint[i][j]) + k*2 + l );
-                }
-                printf("\n");
-            }
-            printf("}\n");
-            // FONCTIONNE
-
-        }
-    }
-
-
+    // Allocation Domaines
     newCSP->matrixDomain = newMatrix(nbVariable, nbValue);
 
     return newCSP;
@@ -55,16 +28,8 @@ CSP* initCSP(int nbVariable, int nbValue){
 void freeCSP(CSP* csp, int nbVariable, int nbValue){
 
     // Libération de la mémoire allouée pour les matrices
-    //freeMatrix(csp->matrixConstraint, nbVariable);
     freeMatrix(csp->matrixDomain, nbVariable);
-
-
-    /*for(int i=0; i < nbVariable; ++i){
-
-        free( csp->matrixConstraint);
-
-    }*/
-
+    freeConstraintMatrix(csp->matrixConstraint, nbVariable, nbValue);
 
     // Libération de mémoire pour la structure CSP
     free( csp );
@@ -75,15 +40,82 @@ void freeCSP(CSP* csp, int nbVariable, int nbValue){
 */
 void printCSP(CSP* csp, int nbVariable, int nbValue){
     printf("\n\n----| CSP |----\n");
-    printf("\n+++ CONTRAINTES +++\n");
-    //printMatrix(csp->matrixConstraint, nbVariable, nbVariable);
-    printf("\n--- DOMAINE ---\n");
+    printf("\n+++ CONTRAINTES & TUPLES +++\n");
+
+    for(int i=0; i < nbVariable; ++i){
+        for(int j=0; j < nbVariable; ++j){
+            if( csp->matrixConstraint[i][j] != NULL ){
+                printf(">>> CONTRAINTE (%d,%d) <<<\n", i, j);
+                printMatrix(csp->matrixConstraint[i][j], nbValue, nbValue);
+            }
+        }
+    }
+
+    printf("\n+++ DOMAINE +++\n");
     printMatrix(csp->matrixDomain, nbVariable, nbValue);
-    //printf("\n+++ TUPLES +++\n");
-    //
-
-    // //*(arrayP[i][0]) + k*2 + l ) <<<<--- Pour accéder à une valeur
-
 
     printf("\n----| FIN |----\n");
+}
+
+
+/*    MATRICE       */
+/*
+ Création de la matrice de contrainte, toutes les contraintes sont initialisés à NULL.
+ Ce sera aux différents générateurs de remplir les tuples de ces fameuses contraintes.
+*/
+int**** newConstraintMatrix(int nbElement){
+    int**** matrixConstraint = malloc( nbElement * sizeof(int***) );
+    for(int i=0; i < nbElement; ++i){
+        matrixConstraint[i] = malloc( nbElement * sizeof(int**) );
+        for(int j=0; j < nbElement; ++j)
+            matrixConstraint[i][j] = NULL;
+    }
+
+    return matrixConstraint;
+}
+
+// Création d'un tableau d'entier à nbElement
+int* newTab(int nbElement){ return malloc( nbElement * sizeof(int) ); }
+
+// Création d'une matrice à lenDimOne * lenDimTwo éléments
+int** newMatrix(int lenDimOne, int lenDimTwo){
+    int** newMatrix = malloc( lenDimOne * sizeof(int*) );
+
+    for(int i=0; i < lenDimOne; ++i)
+        newMatrix[i] = newTab(lenDimTwo);
+
+    return newMatrix;
+}
+
+
+void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleElement){
+    for(int i=0; i < nbConstraintElement; ++i){
+        for(int j=0; j < nbConstraintElement; ++j)
+            if( matrix[i][j] != NULL )
+                freeMatrix(matrix[i][j], nbTupleElement);
+
+        free( matrix[i] );
+    }
+    free( matrix );
+}
+
+
+// Libération de mémoire d'une matrice
+void freeMatrix(int** matrix, int lenDimOne){
+    for(int i=0; i < lenDimOne; ++i)
+        free( matrix[i] );
+    free( matrix );
+}
+
+// Afficher un tableau de nbElement
+void printTab(int* tab, int nbElement){
+    for(int i=0; i < nbElement; ++i)
+        printf("[%d]", tab[i]);
+    printf("\n");
+}
+
+// Afficher une matrice
+void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
+    for(int i=0; i < lenDimOne; ++i)
+        printTab(matrix[i], lenDimTwo);
 }
