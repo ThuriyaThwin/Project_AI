@@ -122,7 +122,7 @@ void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
 
 
 /*
-    Si il existe une contrainte entre la valeur indexVariable & i
+    Si il existe une contrainte entre la variable indexVariable & i
         -> recherche une correspondance dans les tuples permis
 
     renvoi 1 si contrainte trouvée
