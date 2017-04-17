@@ -44,7 +44,7 @@ void pigeonsGenerator(int nbPigeons){
             }
         }
         printf("Init Forward Checking avec %d valeur & %d domaine.\n", nbPigeons, nbPigeons-1);
-        clock_t begin = clock();                                                            // Démarrage du compteur de temps
+        clock_t begin = clock();                                                          // Démarrage du compteur de temps
         forwardCheckingPigeons(domaines, nbPigeons, affiche);
         clock_t end = clock();
         double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
