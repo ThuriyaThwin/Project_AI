@@ -122,16 +122,21 @@ void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
 
 
 /*
+    Fonction à utiliser pour savoir si la valeur associée à une variable ne viole aucune contrainte avec les autres variables.
+
+    En entrée :
+        l'index de la variable (ligne de notre tableau de domaine) que l'on vient de modifier (colonne de notre tableau de domaine mise à 1).
+
     Si il existe une contrainte entre la variable indexVariable & i
-        -> recherche une correspondance dans les tuples permis
+        -> recherche une correspondance dans les tuples permis (couple de valeur permis)
 
     renvoi 1 si contrainte trouvée
     renvoi 0 si aucune contrainte trouvée
 */
-int checkForConstraint(CSP* csp, int indexRowVariable, int nbVariable, int nbValue){
-    for(int i=0 ; i < indexRowVariable ; ++i )
-        if( csp->matrixConstraint[indexRowVariable][i] != NULL )
-            if( checkAllowedCouple(csp, indexRowVariable, i, nbValue) == 1 )
+int checkForConstraint(CSP* csp, int indexVariable, int nbVariable, int nbValue){
+    for(int i=0 ; i < indexVariable ; ++i )
+        if( csp->matrixConstraint[indexVariable][i] != NULL )
+            if( checkAllowedCouple(csp, indexVariable, i, nbValue) == 1 )
                 return 1;
 
     return 0;
