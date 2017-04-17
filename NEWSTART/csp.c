@@ -119,3 +119,51 @@ void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
     for(int i=0; i < lenDimOne; ++i)
         printTab(matrix[i], lenDimTwo);
 }
+
+
+/*
+    Si il existe une contrainte entre la valeur indexVariable & i
+        -> recherche une correspondance dans les tuples permis
+
+    renvoi 1 si contrainte trouvée
+    renvoi 0 si aucune contrainte trouvée
+*/
+int checkForConstraint(CSP* csp, int indexRowVariable, int nbVariable, int nbValue){
+    for(int i=0 ; i < indexRowVariable ; ++i )
+        if( csp->matrixConstraint[indexRowVariable][i] != NULL )
+            if( checkAllowedCouple(csp, indexRowVariable, i, nbValue) == 1 )
+                return 1;
+
+    return 0;
+}
+
+/*
+    Récupère la valeur prise par deux variables dans leurs domaines respectifs.
+    Renvoi 0 si la contrainte est violée.
+    Renvoi 1 si la contrainte est non-violée.
+*/
+int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue){
+    // Recherche de la valeur prise par nos deux variables :
+    int colOne = -1;
+    int colTwo = -1;
+
+    for(int i=0; i < nbValue; ++i){
+        if( csp->matrixDomain[indexVarOne][i] == 1 ) colOne = i;    // valeur variable1
+        if( csp->matrixDomain[indexVarTwo][i] == 1 ) colTwo = i;    // valeur variable2
+        if( (colOne >= 0) && (colTwo >= 0) ) break;
+    }
+
+    // On regarde si le Tuple ( colOne, colTwo ) == 1 :
+    // Couple autorisé par la contrainte -> contrainte non-violée
+    if( csp->matrixConstraint[indexVarOne][indexVarTwo][colOne][colTwo] == 1 )
+        return 1;
+
+    // Sinon, si == 0 :
+    // couple non-autorisé par la contrainte -> contrainte violée
+
+    // MAJ du domaine de la variable, on indique par quelle autre variable elle a été filtrée
+    // On indique -1 * index de la variable
+    // Cela premettra notamment lors du BackJumping par exemple, de connaître plus tard la plus haute valeur "en faute" dans l'arbre de recherche
+    csp->matrixDomain[indexVarOne][colOne] = -indexVarTwo;
+    return 0;
+}

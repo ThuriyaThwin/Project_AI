@@ -55,7 +55,7 @@
     int**** matrixConstraint;
 
     matrixConstraint[0][1] = matrixValue;
-        -> traduction : contrainte entre 0 & 1 à pour tuples permis le tableau matrixValue.
+        -> traduction : contrainte entre 0 & 1 a pour tuples permis le tableau matrixValue.
 
     accéder aux tuples de la contrainte C( 0, 1 ) :
         matrixConstraint[0][1][0][0] == 0;
@@ -75,7 +75,7 @@
 
             --> Si les deux index situés dans le domaine ne sont pas trouvés dans les tuples :
 
-            imagions :
+            imaginons :
 
 
             matrixDomain = {
@@ -117,6 +117,9 @@ void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleEl
 void freeMatrix(int** matrix, int lenDimOne);
 void printTab(int* tab, int nbElement);
 void printMatrix(int** matrix, int lenDimOne, int lenDimTwo);
+
+int checkForConstraint(CSP* csp, int indexRowVariable, int nbVariable, int nbValue);
+int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue);
 
 
 #endif //CSP_H
