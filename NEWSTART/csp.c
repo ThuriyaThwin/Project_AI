@@ -136,7 +136,7 @@ void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
 int checkForConstraint(CSP* csp, int indexVariable, int nbValue){
     for(int i=0 ; i < indexVariable ; ++i )
         if( csp->matrixConstraint[indexVariable][i] != NULL )
-            if( checkAllowedCouple(csp, indexVariable, i, nbValue) == 1 )
+            if( checkAllowedCouple(csp, indexVariable, i, nbValue) > 0 )
                 return 1;
 
     return 0;
@@ -144,8 +144,8 @@ int checkForConstraint(CSP* csp, int indexVariable, int nbValue){
 
 /*
     Récupère la valeur prise par deux variables dans leurs domaines respectifs.
-    Renvoi 0 si la contrainte est violée.
-    Renvoi 1 si la contrainte est non-violée.
+    Renvoi 1 si la contrainte est violée.
+    Renvoi 0 si la contrainte est non-violée.
 */
 int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue){
     // Recherche de la valeur prise par nos deux variables :
@@ -161,7 +161,7 @@ int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue){
     // On regarde si le Tuple ( colOne, colTwo ) == 1 :
     // Couple autorisé par la contrainte -> contrainte non-violée
     if( csp->matrixConstraint[indexVarOne][indexVarTwo][colOne][colTwo] == 1 )
-        return 1;
+        return 0;
 
     // Sinon, si == 0 :
     // couple non-autorisé par la contrainte -> contrainte violée
@@ -170,5 +170,5 @@ int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue){
     // On indique -1 * index de la variable
     // Cela premettra notamment lors du BackJumping par exemple, de connaître plus tard la plus haute valeur "en faute" dans l'arbre de recherche
     csp->matrixDomain[indexVarOne][colOne] = -indexVarTwo;
-    return 0;
+    return 1;
 }
