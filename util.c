@@ -406,7 +406,7 @@ int checkForConstraintInRow(int** matrix, int number_of_the_row, int nbTotalCol)
 }
 
 void fillColumns(int **domaines, int i, int j, int nbPigeons, int value){
-    for(int k = i; k < nbPigeons; ++k)
+    for(int k = i + 1; k < nbPigeons; ++k)
         domaines[k][j] = value;
 }
 
