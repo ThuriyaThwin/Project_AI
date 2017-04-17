@@ -118,7 +118,7 @@ void freeMatrix(int** matrix, int lenDimOne);
 void printTab(int* tab, int nbElement);
 void printMatrix(int** matrix, int lenDimOne, int lenDimTwo);
 
-int checkForConstraint(CSP* csp, int indexRowVariable, int nbVariable, int nbValue);
+int checkForConstraint(CSP* csp, int indexRowVariable, int nbValue);
 int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue);
 
 

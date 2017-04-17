@@ -133,7 +133,7 @@ void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
     renvoi 1 si contrainte trouvée
     renvoi 0 si aucune contrainte trouvée
 */
-int checkForConstraint(CSP* csp, int indexVariable, int nbVariable, int nbValue){
+int checkForConstraint(CSP* csp, int indexVariable, int nbValue){
     for(int i=0 ; i < indexVariable ; ++i )
         if( csp->matrixConstraint[indexVariable][i] != NULL )
             if( checkAllowedCouple(csp, indexVariable, i, nbValue) == 1 )
