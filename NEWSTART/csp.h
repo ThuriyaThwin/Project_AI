@@ -1,7 +1,7 @@
 #ifndef CSP_H
 #define CSP_H
 
-
+#include "stack.h"
 /*
     STRUCTURE DU CSP :
 
@@ -101,25 +101,30 @@
 
 
 typedef struct CSP {
+
     int**** matrixConstraint;
     int** matrixDomain;
+    int* tabCheckedValue;
+
+    Stack* results;
+    int nbResult;
+
+    int nbVariable;
+    int nbValue;
+
 } CSP;
 
 CSP* initCSP(int nbVariable, int nbValue);
-void freeCSP(CSP* csp, int nbVariable, int nbValue);
-void printCSP(CSP* csp, int nbVariable, int nbValue);
+void freeCSP(CSP* csp);
+void printCSP(CSP* csp);
 
-int* newTab(int nbElement);
-int** newMatrix(int lenDimOne, int lenDimTwo);
 int**** newConstraintMatrix(int nbElement);
-
 void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleElement);
-void freeMatrix(int** matrix, int lenDimOne);
-void printTab(int* tab, int nbElement);
-void printMatrix(int** matrix, int lenDimOne, int lenDimTwo);
 
-int checkForConstraint(CSP* csp, int indexRowVariable, int nbValue);
-int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue);
+int checkForConstraint(CSP* csp, int indexVariable);
+int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo);
 
+void addCheckedValue(CSP* csp, int I_position, int J_position);
+//void resetCheckedValue(CSP* csp, int fromA, int toB);
 
 #endif //CSP_H

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "pigeon.h"
+#include "matrix.h"
 
 // GENERATION INITIALIE POUR LES PIGEONS
 // Ecriture dans le fichier + création du CSP
@@ -33,7 +34,7 @@ CSP* pigeonGenerator(int nbPigeon, int nbNest){
             sprintf(buffer, "%s(%d, %d)\n", buffer, i, j);
 
             //Lignes tuples permis
-            newCSP->matrixConstraint[i][j] = newMatrix(nbNest, nbNest);
+            newCSP->matrixConstraint[i][j] = createNewMatrix(nbNest, nbNest);
             for(int k = 0; k < nbNest; ++k)
                 for(int l = 0; l < nbNest; ++l) {
                     if(k == l) continue;

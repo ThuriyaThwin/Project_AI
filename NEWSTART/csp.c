@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 #include "csp.h"
+#include "matrix.h"
+#include "stack.h"
 
 /*
     @param : nombre de variable dans notre problème
@@ -17,7 +19,18 @@ CSP* initCSP(int nbVariable, int nbValue){
     newCSP->matrixConstraint = newConstraintMatrix(nbVariable);
 
     // Allocation Domaines
-    newCSP->matrixDomain = newMatrix(nbVariable, nbValue);
+    newCSP->matrixDomain = createNewMatrix(nbVariable, nbValue);
+
+    // Allocation Tableau de sauvegarde d'état
+    newCSP->tabCheckedValue = createNewTab(nbVariable);
+    //resetCheckedValue(newCSP, 0, nbVariable-1); // On met à -1 tous les états sauvegardés
+
+    // Allocation de la pile de résultats
+    newCSP->results = initStack();
+    newCSP->nbResult = 0;
+
+    newCSP->nbVariable = nbVariable;
+    newCSP->nbValue = nbValue;
 
     return newCSP;
 }
@@ -25,11 +38,15 @@ CSP* initCSP(int nbVariable, int nbValue){
 /*
     Libération de mémoire pour le CSP
 */
-void freeCSP(CSP* csp, int nbVariable, int nbValue){
+void freeCSP(CSP* csp){
 
-    // Libération de la mémoire allouée pour les matrices
-    freeMatrix(csp->matrixDomain, nbVariable);
-    freeConstraintMatrix(csp->matrixConstraint, nbVariable, nbValue);
+    // Libération de la mémoire allouée pour les différents tableaux :
+    free(csp->tabCheckedValue);
+    freeMatrix(csp->matrixDomain, csp->nbVariable);
+    freeConstraintMatrix(csp->matrixConstraint, csp->nbVariable, csp->nbValue);
+
+    // Libération mémoire pile
+    wipeStack(csp->results, csp->nbResult);
 
     // Libération de mémoire pour la structure CSP
     free( csp );
@@ -38,21 +55,24 @@ void freeCSP(CSP* csp, int nbVariable, int nbValue){
 /*
     AFFICHAGE CSP :
 */
-void printCSP(CSP* csp, int nbVariable, int nbValue){
+void printCSP(CSP* csp){
     printf("\n\n----| CSP |----\n");
     printf("\n+++ CONTRAINTES & TUPLES +++\n");
 
-    for(int i=0; i < nbVariable; ++i){
-        for(int j=0; j < nbVariable; ++j){
+    for(int i=0; i < csp->nbVariable; ++i){
+        for(int j=0; j < csp->nbVariable; ++j){
             if( csp->matrixConstraint[i][j] != NULL ){
                 printf(">>> CONTRAINTE (%d,%d) <<<\n", i, j);
-                printMatrix(csp->matrixConstraint[i][j], nbValue, nbValue);
+                printMatrix(csp->matrixConstraint[i][j], csp->nbValue, csp->nbValue);
             }
         }
     }
 
     printf("\n+++ DOMAINE +++\n");
-    printMatrix(csp->matrixDomain, nbVariable, nbValue);
+    printMatrix(csp->matrixDomain, csp->nbVariable, csp->nbValue);
+
+    printf("\n+++ RESULTAT +++\n");
+    printAllStack(csp->results, csp->nbResult);
 
     printf("\n----| FIN |----\n");
 }
@@ -74,20 +94,6 @@ int**** newConstraintMatrix(int nbElement){
     return matrixConstraint;
 }
 
-// Création d'un tableau d'entier à nbElement
-int* newTab(int nbElement){ return malloc( nbElement * sizeof(int) ); }
-
-// Création d'une matrice à lenDimOne * lenDimTwo éléments
-int** newMatrix(int lenDimOne, int lenDimTwo){
-    int** newMatrix = malloc( lenDimOne * sizeof(int*) );
-
-    for(int i=0; i < lenDimOne; ++i)
-        newMatrix[i] = newTab(lenDimTwo);
-
-    return newMatrix;
-}
-
-
 void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleElement){
     for(int i=0; i < nbConstraintElement; ++i){
         for(int j=0; j < nbConstraintElement; ++j)
@@ -98,28 +104,6 @@ void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleEl
     }
     free( matrix );
 }
-
-
-// Libération de mémoire d'une matrice
-void freeMatrix(int** matrix, int lenDimOne){
-    for(int i=0; i < lenDimOne; ++i)
-        free( matrix[i] );
-    free( matrix );
-}
-
-// Afficher un tableau de nbElement
-void printTab(int* tab, int nbElement){
-    for(int i=0; i < nbElement; ++i)
-        printf("[%d]", tab[i]);
-    printf("\n");
-}
-
-// Afficher une matrice
-void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
-    for(int i=0; i < lenDimOne; ++i)
-        printTab(matrix[i], lenDimTwo);
-}
-
 
 /*
     Fonction à utiliser pour savoir si la valeur associée à une variable ne viole aucune contrainte avec les autres variables.
@@ -133,10 +117,10 @@ void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
     renvoi 1 si contrainte trouvée
     renvoi 0 si aucune contrainte trouvée
 */
-int checkForConstraint(CSP* csp, int indexVariable, int nbValue){
+int checkForConstraint(CSP* csp, int indexVariable){
     for(int i=0 ; i < indexVariable ; ++i )
         if( csp->matrixConstraint[indexVariable][i] != NULL )
-            if( checkAllowedCouple(csp, indexVariable, i, nbValue) > 0 )
+            if( checkAllowedCouple(csp, indexVariable, i) > 0 )
                 return 1;
 
     return 0;
@@ -147,12 +131,12 @@ int checkForConstraint(CSP* csp, int indexVariable, int nbValue){
     Renvoi 1 si la contrainte est violée.
     Renvoi 0 si la contrainte est non-violée.
 */
-int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue){
+int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo){
     // Recherche de la valeur prise par nos deux variables :
     int colOne = -1;
     int colTwo = -1;
 
-    for(int i=0; i < nbValue; ++i){
+    for(int i=0; i < csp->nbValue; ++i){
         if( csp->matrixDomain[indexVarOne][i] == 1 ) colOne = i;    // valeur variable1
         if( csp->matrixDomain[indexVarTwo][i] == 1 ) colTwo = i;    // valeur variable2
         if( (colOne >= 0) && (colTwo >= 0) ) break;
@@ -172,3 +156,32 @@ int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo, int nbValue){
     csp->matrixDomain[indexVarOne][colOne] = -indexVarTwo;
     return 1;
 }
+
+/*
+
+    Lorsqu'un état réussi -> aucunes contraintes violées par la variable i, lorsqu'elle prend la valeur j ;
+                            --> matriceDomaine[i][j] == 1.
+
+    On sauvegarde la valeur prise par i dans un tableau.
+    Cela nous permettra plus tard de revenir dessus, et de reconstruire notre matrice grâce aux valeurs inscrites dans ce tableau (exemple: backjumping).
+
+*/
+void addCheckedValue(CSP* csp, int I_position, int J_position){
+    csp->tabCheckedValue[I_position] = J_position;
+
+    // Solution TROUVEE
+    if( I_position == csp->nbVariable-1 ){
+        push(csp->results, csp->tabCheckedValue, csp->nbVariable);
+        ++csp->nbResult;
+    }
+
+}
+
+/*
+
+void resetCheckedValue(CSP* csp, int fromA, int toB){
+    for(int i=fromA; i <= toB; ++i)
+        csp->tabCheckedValue[i] = -1;
+}
+
+*/

@@ -5,9 +5,9 @@
 
 int main(){
 
-    CSP* csp = pigeonGenerator(17, 16);
-    printCSP(csp, 17, 16);
-    freeCSP(csp, 17, 16);
+    CSP* csp = pigeonGenerator(4, 3);
+    printCSP(csp);
+    freeCSP(csp);
 
     /*
         EXEMPLE fonctionnement CSP contrainte + tuples
