@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int backj(){
+#include "backj.h"
+
+void backjumping(CSP* csp){
 
     
+
 }

@@ -18,9 +18,12 @@ int** createNewMatrix(int lenDimOne, int lenDimTwo){
 
 // Libération de mémoire d'une matrice
 void freeMatrix(int** matrix, int lenDimOne){
-    for(int i=0; i < lenDimOne; ++i)
-        free( matrix[i] );
-    free( matrix );
+    for(int i=0; i < lenDimOne; ++i){
+        if( matrix[i] != NULL )
+            free( matrix[i] );
+    }
+    if( matrix != NULL)
+        free( matrix );
 }
 
 // Copier un tableau par valeur

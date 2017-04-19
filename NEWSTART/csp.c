@@ -95,10 +95,19 @@ int**** newConstraintMatrix(int nbElement){
 }
 
 void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleElement){
+
+    // Suppression une seule fois de la matrice de tuple
+    freeMatrix(matrix[0][1], nbTupleElement);
+
     for(int i=0; i < nbConstraintElement; ++i){
-        for(int j=0; j < nbConstraintElement; ++j)
-            if( matrix[i][j] != NULL )
-                freeMatrix(matrix[i][j], nbTupleElement);
+        /*
+
+            Impossible à réaliser car dans le cas du pigeon, toutes les contraintes pointes vers le même tuple
+
+        */
+        //for(int j=0; j < nbConstraintElement; ++j)
+            //if( matrix[i][j] != NULL )
+                //freeMatrix(matrix[i][j], nbTupleElement);
 
         free( matrix[i] );
     }
