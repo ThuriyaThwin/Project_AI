@@ -118,8 +118,8 @@ CSP* initCSP(int nbVariable, int nbValue);
 void freeCSP(CSP* csp);
 void printCSP(CSP* csp);
 
-int**** newConstraintMatrix(int nbElement);
-void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleElement);
+int**** newConstraintMatrix(CSP* csp);
+void freeConstraintMatrix(CSP* csp);
 
 int checkForConstraint(CSP* csp, int indexVariable);
 int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo);

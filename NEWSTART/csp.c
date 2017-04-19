@@ -14,23 +14,24 @@
 CSP* initCSP(int nbVariable, int nbValue){
     // Allocation de notre structure CSP
     CSP* newCSP = malloc(sizeof( *newCSP ));
+    newCSP->nbVariable = nbVariable;
+    newCSP->nbValue = nbValue;
 
     // Allocation Contraintes
-    newCSP->matrixConstraint = newConstraintMatrix(nbVariable);
+    newCSP->matrixConstraint = newConstraintMatrix(newCSP);
 
     // Allocation Domaines
-    newCSP->matrixDomain = createNewMatrix(nbVariable, nbValue);
+    newCSP->matrixDomain = createNewMatrix(newCSP->nbVariable, newCSP->nbValue);
 
     // Allocation Tableau de sauvegarde d'état
-    newCSP->tabCheckedValue = createNewTab(nbVariable);
+    newCSP->tabCheckedValue = createNewTab(newCSP->nbVariable);
     //resetCheckedValue(newCSP, 0, nbVariable-1); // On met à -1 tous les états sauvegardés
 
     // Allocation de la pile de résultats
     newCSP->results = initStack();
     newCSP->nbResult = 0;
 
-    newCSP->nbVariable = nbVariable;
-    newCSP->nbValue = nbValue;
+
 
     return newCSP;
 }
@@ -43,7 +44,7 @@ void freeCSP(CSP* csp){
     // Libération de la mémoire allouée pour les différents tableaux :
     free(csp->tabCheckedValue);
     freeMatrix(csp->matrixDomain, csp->nbVariable);
-    freeConstraintMatrix(csp->matrixConstraint, csp->nbVariable, csp->nbValue);
+    freeConstraintMatrix(csp);
 
     // Libération mémoire pile
     wipeStack(csp->results, csp->nbResult);
@@ -83,35 +84,42 @@ void printCSP(CSP* csp){
  Création de la matrice de contrainte, toutes les contraintes sont initialisés à NULL.
  Ce sera aux différents générateurs de remplir les tuples de ces fameuses contraintes.
 */
-int**** newConstraintMatrix(int nbElement){
-    int**** matrixConstraint = malloc( nbElement * sizeof(int***) );
-    for(int i=0; i < nbElement; ++i){
-        matrixConstraint[i] = malloc( nbElement * sizeof(int**) );
-        for(int j=0; j < nbElement; ++j)
+int**** newConstraintMatrix(CSP* csp){
+    int**** matrixConstraint = malloc( csp->nbVariable * sizeof(int***) );
+    for(int i=0; i < csp->nbVariable; ++i){
+        matrixConstraint[i] = malloc( csp->nbVariable * sizeof(int**) );
+        for(int j=0; j < csp->nbVariable; ++j)
             matrixConstraint[i][j] = NULL;
     }
 
     return matrixConstraint;
 }
 
-void freeConstraintMatrix(int**** matrix, int nbConstraintElement, int nbTupleElement){
+void freeConstraintMatrix(CSP* csp){
 
-    // Suppression une seule fois de la matrice de tuple
-    freeMatrix(matrix[0][1], nbTupleElement);
+    // Chaque contrainte, pointe toujours vers la même matrice de couple/tuple (en mémoire)
+    // On la libère donc une seule fois !
 
-    for(int i=0; i < nbConstraintElement; ++i){
-        /*
+    // Faut-il encore la trouvée :
 
-            Impossible à réaliser car dans le cas du pigeon, toutes les contraintes pointes vers le même tuple
+    int done = 0; // flag
+    for(int i=0; i < csp->nbVariable; ++i){
 
-        */
-        //for(int j=0; j < nbConstraintElement; ++j)
-            //if( matrix[i][j] != NULL )
-                //freeMatrix(matrix[i][j], nbTupleElement);
+        if( done == 0 ){        // Si la matrice de tuple/couple n'est toujours pas trouvée
 
-        free( matrix[i] );
+            for(int j=0; j < csp->nbVariable; ++j){
+                if( csp->matrixConstraint[i][j] != NULL ){      // Si il existe bien une matrice de tuple/couple
+                    freeMatrix( csp->matrixConstraint[i][j], csp->nbValue );  // Libération de mémoire
+                    done = 1;                                   // A éxecuter une seule fois ! // Sinon doublefree corruption
+                    break;                                      // On sort du for
+                }
+            }
+
+        }
+
+        free( csp->matrixConstraint[i] );  // Libération mémoire matrice contrainte
     }
-    free( matrix );
+    free( csp->matrixConstraint );
 }
 
 /*
