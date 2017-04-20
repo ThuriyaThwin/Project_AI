@@ -3,6 +3,6 @@
 
 #include "csp.h"
 
-CSP* pigeonGenerator(int nbPigeon, int nbNest, int writeTXT);
+CSP* pigeonGenerator(int nbPigeon, int writeTXT);
 
 #endif // PIGEON_H

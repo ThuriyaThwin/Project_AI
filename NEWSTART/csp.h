@@ -125,6 +125,6 @@ int checkForConstraint(CSP* csp, int indexVariable);
 int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo);
 
 void addCheckedValue(CSP* csp, int I_position, int J_position);
-//void resetCheckedValue(CSP* csp, int fromA, int toB);
+int findValueDomain(CSP* csp, int I_position, int theValue);
 
 #endif //CSP_H

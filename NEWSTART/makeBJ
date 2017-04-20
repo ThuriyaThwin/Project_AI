@@ -1,1 +1,0 @@
-gcc -Wall -o main main.c backj.c csp.c pigeon.c stack.c matrix.c

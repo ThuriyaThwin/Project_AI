@@ -1,35 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "pigeon.h"
+#include "dame.h"
 #include "matrix.h"
 
-// GENERATION INITIALIE POUR LES PIGEONS
-// Ecriture dans le fichier + création du CSP
-CSP* pigeonGenerator(int nbPigeon, int writeTXT){
-    int nbNest = nbPigeon-1;
-    CSP* newCSP = initCSP(nbPigeon, nbNest);
+CSP* dameGenerator(int nbDame, int writeTXT){
 
-    /*
-        Toutes les contraintes ont les mêmes tuples/couples permis.
-        On définit une seule fois en mémoire cette fameuse matrice.
-        On fera pointer ensuite toutes les contraintes vers celle-ci.
-    */
-    int** matrixCouple = createNewMatrix(nbNest, nbNest);
-    for(int i=0; i < nbNest; ++i){
-        for(int j=0; j < nbNest; ++j){
+    CSP* newCSP = initCSP(nbDame, nbDame);
+
+    int** matrixCouple = createNewMatrix(nbDame, nbDame);
+    for(int i=0; i < nbDame; ++i){
+        for(int j=0; j < nbDame; ++j){
             if( i != j ){
+
+
                 matrixCouple[i][j] = 1;
+
+
             }
         }
     }
 
-    FILE* txt = fopen("config_pigeon.txt", "w");
+    FILE* txt = fopen("config_dame.txt", "w");
 
     if(writeTXT){
         // Ligne variable X
         fprintf(txt, "X\n");
-        for(int i=0; i < nbPigeon; ++i)
+        for(int i=0; i < nbDame; ++i)
             fprintf(txt, "%d ", i);
         fprintf(txt, "\n");
     }
@@ -37,9 +34,9 @@ CSP* pigeonGenerator(int nbPigeon, int writeTXT){
     if(writeTXT){
         //Lignes domaines D
         fprintf(txt, "D\n");
-        for(int i=0; i < nbPigeon; ++i){
+        for(int i=0; i < nbDame; ++i){
             fprintf(txt, "d%d = ", i);
-            for(int j=0; j < nbNest; ++j)
+            for(int j=0; j < nbDame; ++j)
                 fprintf(txt, "%d ", j);
             fprintf(txt, "\n");
         }
@@ -48,8 +45,8 @@ CSP* pigeonGenerator(int nbPigeon, int writeTXT){
 
     //Lignes contraintes C
     if(writeTXT) fprintf(txt, "C\n");
-    for(int i=0; i < nbPigeon; ++i){
-        for(int j=i+1; j < nbPigeon; ++j){
+    for(int i=0; i < nbDame; ++i){
+        for(int j=i+1; j < nbDame; ++j){
             if(i == j) continue;
 
             if(writeTXT) fprintf(txt, "(%d, %d) & (%d, %d)\n", i, j, j, i);
@@ -59,14 +56,15 @@ CSP* pigeonGenerator(int nbPigeon, int writeTXT){
             newCSP->matrixConstraint[j][i] = matrixCouple;
 
             if(writeTXT){
-                for(int k = 0; k < nbNest; ++k)
-                    for(int l = 0; l < nbNest; ++l) {
+                for(int k = 0; k < nbDame; ++k)
+                    for(int l = 0; l < nbDame; ++l) {
                         if(k == l) continue;
                          fprintf(txt, "%d %d\n", k, l);
                     }
             }
         }
     }
+
 
     fclose( txt );
 

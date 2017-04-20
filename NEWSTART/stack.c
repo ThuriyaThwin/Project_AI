@@ -68,5 +68,5 @@ void printAllStack(Stack* stack, int row){
         printTab(index->tab, row);
         index = index->next;
     }
-    printf("-- FOND DE PILE --\n");
+    printf(" -- FOND DE PILE --\n");
 }

@@ -2,7 +2,7 @@ CC = gcc
 
 CCFLAGS = -Wall
 
-OBJ = util.o generator.o backjumping.o solver.o
+OBJ = *.o
 
 all: main
 
