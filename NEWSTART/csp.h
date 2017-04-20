@@ -115,11 +115,12 @@ typedef struct CSP {
 } CSP;
 
 CSP* initCSP(int nbVariable, int nbValue);
-void freeCSP(CSP* csp);
+void freeCSP(CSP* csp, int flag);
 void printCSP(CSP* csp);
 
 int**** newConstraintMatrix(CSP* csp);
-void freeConstraintMatrix(CSP* csp);
+void freeConstraintMatrixPigeon(CSP* csp);
+void freeConstraintMatrixDame(CSP* csp);
 
 int checkForConstraint(CSP* csp, int indexVariable);
 int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo);

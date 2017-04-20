@@ -38,12 +38,14 @@ CSP* initCSP(int nbVariable, int nbValue){
 /*
     Libération de mémoire pour le CSP
 */
-void freeCSP(CSP* csp){
+void freeCSP(CSP* csp, int flag){
 
     // Libération de la mémoire allouée pour les différents tableaux :
     free(csp->tabCheckedValue);
     freeMatrix(csp->matrixDomain, csp->nbVariable);
-    freeConstraintMatrix(csp);
+
+    if(flag == 1) freeConstraintMatrixPigeon(csp);
+    if(flag == 2) freeConstraintMatrixDame(csp);
 
     // Libération mémoire pile
     wipeStack(csp->results, csp->nbResult);
@@ -88,7 +90,24 @@ int**** newConstraintMatrix(CSP* csp){
     return matrixConstraint;
 }
 
-void freeConstraintMatrix(CSP* csp){
+void freeConstraintMatrixDame(CSP* csp){
+
+    // Chaque contrainte, pointe toujours vers la même matrice de couple/tuple (en mémoire)
+    // On la libère donc une seule fois !
+
+    // Faut-il encore la trouvée :
+    for(int i=0; i < csp->nbVariable; ++i){
+        for(int j=i+1; j < csp->nbVariable; ++j){
+            if( csp->matrixConstraint[i][j] != NULL ){                          // Si il existe bien une matrice de tuple/couple
+                freeMatrix( csp->matrixConstraint[i][j], csp->nbValue );        // Libération de mémoire
+            }
+        }
+        free( csp->matrixConstraint[i] );                                           // Libération mémoire matrice contrainte
+    }
+    free( csp->matrixConstraint );
+}
+
+void freeConstraintMatrixPigeon(CSP* csp){
 
     // Chaque contrainte, pointe toujours vers la même matrice de couple/tuple (en mémoire)
     // On la libère donc une seule fois !

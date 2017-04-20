@@ -90,7 +90,7 @@ int main(int argc, char** argv){
     printAllStack(csp->results, csp->nbResult);
     printf("\n\nTEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
 
-    freeCSP(csp);
+    freeCSP(csp, atoi(argv[2]));
 
     /*
         EXEMPLE fonctionnement CSP contrainte + tuples
