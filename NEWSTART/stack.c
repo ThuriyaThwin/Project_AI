@@ -65,6 +65,7 @@ void printAllStack(Stack* stack, int row){
 
     printf("-- AFFICHAGE PILE --\n");
     while( index != NULL ){
+        printf("-> ");
         printTab(index->tab, row);
         index = index->next;
     }
