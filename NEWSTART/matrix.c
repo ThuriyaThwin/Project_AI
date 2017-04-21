@@ -58,9 +58,11 @@ void printTab(int* tab, int nbElement){
 
 // Afficher une matrice
 void printMatrix(int** matrix, int lenDimOne, int lenDimTwo){
+    if(matrix == NULL) return;
     printf("{\n");
-    for(int i=0; i < lenDimOne; ++i)
+    for(int i=0; i < lenDimOne; ++i){
         printTab(matrix[i], lenDimTwo);
+    }
     printf("}\n");
 }
 

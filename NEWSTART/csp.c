@@ -145,7 +145,6 @@ void freeConstraintMatrixPigeon(CSP* csp){
     renvoi 0 si aucune contrainte trouvée
 */
 int checkForConstraint(CSP* csp, int indexVariable){
-
     int varWitchConstraint;
 
     for(int i=0 ; i < indexVariable ; ++i )
@@ -172,11 +171,14 @@ int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo){
         if( (colOne >= 0) && (colTwo >= 0) ) break;
     }
 
+
+    //printf("D%d[%d] D%d[%d]: %d\n", indexVarOne, indexVarTwo, colOne, colTwo, csp->matrixConstraint[indexVarOne][indexVarTwo][colOne][colTwo]);
+    //printMatrix(csp->matrixConstraint[indexVarOne][indexVarTwo], csp->nbValue, csp->nbValue);
+
     // On regarde si le Tuple ( colOne, colTwo ) == 1 :
     // Couple autorisé par la contrainte -> contrainte non-violée
     if( csp->matrixConstraint[indexVarOne][indexVarTwo][colOne][colTwo] == 1 )
         return -1;
-
 
     csp->matrixDomain[indexVarOne][colOne] = -1;
     return indexVarTwo;

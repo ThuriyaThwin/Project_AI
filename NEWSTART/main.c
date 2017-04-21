@@ -63,7 +63,7 @@ int main(int argc, char** argv){
             printf("--> BACKJUMPING\n");
             if(atoi(argv[4]) == 1){ // Normal
                 printf("---> SANS HEURISTIQUE\n");
-                //backjumping(csp);
+                backjumping(csp);
             }
             if(atoi(argv[4]) == 2){ // Heuristique
 
@@ -87,7 +87,7 @@ int main(int argc, char** argv){
 
     printf("\n++++ RESULTAT(S) ++++\n");
     printf("%d solution(s) trouvée(s) :\n", csp->nbResult);
-    printAllStack(csp->results, csp->nbResult);
+    printAllStack(csp->results, csp->nbVariable);
     printf("\n\nTEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
 
     freeCSP(csp, atoi(argv[2]));
