@@ -52,8 +52,8 @@ CSP* dameGenerator(int nbDame, int writeTXT){
 
             newCSP->matrixConstraint[j][i] = newCSP->matrixConstraint[i][j];
 
-            printf("%d - %d && %d - %d\n", i, j, j, i);
-            printMatrix(newCSP->matrixConstraint[i][j], newCSP->nbValue, newCSP->nbValue);
+            //printf("%d - %d && %d - %d\n", i, j, j, i);
+            //printMatrix(newCSP->matrixConstraint[i][j], newCSP->nbValue, newCSP->nbValue);
             //printMatrix(newCSP->matrixConstraint[j][i], newCSP->nbValue, newCSP->nbValue);
         }
     }
