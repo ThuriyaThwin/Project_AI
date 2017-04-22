@@ -86,9 +86,9 @@ int main(int argc, char** argv){
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
     printf("\n++++ RESULTAT(S) ++++\n");
-    printf("%d solution(s) trouvée(s) :\n", csp->nbResult);
     printAllStack(csp->results, csp->nbVariable);
-    printf("\n\nTEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
+    printf("\n\n%d solution(s) trouvée(s) :\n", csp->nbResult);
+    printf("TEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
 
     freeCSP(csp, atoi(argv[2]));
 

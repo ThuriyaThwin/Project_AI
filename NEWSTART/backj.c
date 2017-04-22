@@ -9,28 +9,19 @@
 */
 void backjumping(CSP* csp){
 
-    /*
-        Tableau permettant la sauvegarde de la variable en cause de l'échec la plus haute
-        dans l'arbre de recherche pour chaque iVariable.
-
-        utile pour le backjumping
-    */
-    int* tabDeepestVariable = createNewTab(csp->nbVariable);
-    for(int i=0; i < csp->nbVariable; ++i){
-        tabDeepestVariable[i] = csp->nbVariable;
-    }
-
     int checkC; // Variable temporaire prennant le résultat de la fonction checkForConstraint
     int Iposition = 0; // index i de notre matrice de Domaines
     int Jposition = 0;  // index j de notre matrice de Domaines
 
     while(csp->matrixDomain[0][csp->nbValue-1] != -1){
 
-        printf("[%d][%d]\n", Iposition, Jposition);
+        //sleep(1);
+
         csp->matrixDomain[Iposition][Jposition] = 1;
         checkC = checkForConstraint(csp, Iposition);
 
         if( checkC < 0 ){ // Contrainte non-violée
+            //printf("{ [%d][%d] }\n", Iposition, Jposition);
             addCheckedValue(csp, Iposition, Jposition);
 
             // Cas où toutes les variables ne sont pas encore testées
@@ -41,60 +32,49 @@ void backjumping(CSP* csp){
 
             // Cas où toutes les variables ont trouvé au moins une valeurs
             else{
-                resetMatrix(csp->matrixDomain, csp->nbVariable, csp->nbValue);
-                Iposition = 0;
-                Jposition = csp->tabCheckedValue[Iposition];
                 csp->matrixDomain[Iposition][Jposition] = -1;
+                /*
+                    Solution trouvée, mais tester si possible d'aller encore sur la droite, sinon backtrack
+                */
+                if( Jposition == csp->nbValue-1 ){
+                    --Iposition;
+                    // On fait attention à backtrack sur une variable où toutes les valeurs n'ont pas déjà été testées
+                    while( Iposition > 0 && csp->tabCheckedValue[Iposition] == csp->nbValue-1 ){
+                        Jposition = csp->tabCheckedValue[Iposition];
+                        csp->matrixDomain[Iposition][Jposition] = -1;
+                        --Iposition;
+                    }
 
-                for(int i=0; i < csp->nbVariable; ++i)
-                    tabDeepestVariable[i] = csp->nbVariable;
+                    Jposition = csp->tabCheckedValue[Iposition];
+                    csp->matrixDomain[Iposition][Jposition] = - 1;
+                }
 
                 ++Jposition;
-                printf("\n");
             }
         }
 
         else{ // Contrainte violée
-            if(checkC < tabDeepestVariable[Iposition] ) tabDeepestVariable[Iposition] = checkC;
 
-                // Cas où toutes les valeurs pour une variable ont été testé
-                if( Jposition == csp->nbValue-1 ){
-                    // Cas où toutes les variables ont été testé
-                    if( Iposition == csp->nbVariable-1 ){
-                        resetMatrix(csp->matrixDomain, csp->nbVariable, csp->nbValue);
-                        for(int i=0; i < tabDeepestVariable[Iposition]; ++i)
-                            csp->matrixDomain[i][ csp->tabCheckedValue[i] ] = 1;
+            // Cas où toutes les valeurs pour une variable ont été testé
+            if( Jposition == csp->nbValue-1 ){
 
-                        Iposition = tabDeepestVariable[Iposition];
-                        Jposition = csp->tabCheckedValue[Iposition];
-                        csp->matrixDomain[Iposition][Jposition] = -1;
-                    }
+                csp->matrixDomain[Iposition][Jposition] = -1;
 
-                    // Cas où toutes les variables n'ont pas encore été testé
-                    // Simple backtracking
-                    else{
-                        tabDeepestVariable[Iposition] = csp->nbVariable;
-                        csp->matrixDomain[Iposition][Jposition] = -1;
-
-                        while( csp->tabCheckedValue[--Iposition] == csp->nbValue-1 ){
-                            Jposition = csp->tabCheckedValue[Iposition];
-                            csp->matrixDomain[Iposition][Jposition] = -1;
-                            tabDeepestVariable[Iposition] = csp->nbVariable;
-                        }
-
-                        Jposition = csp->tabCheckedValue[Iposition];
-                        csp->matrixDomain[Iposition][Jposition] = - 1;
-                        /*
-                        --Iposition;
-                        Jposition = csp->tabCheckedValue[Iposition];
-                        csp->matrixDomain[Iposition][Jposition] = -1;
-                        */
-                    }
+                //if( Iposition == csp->nbVariable-1 ){ Iposition = checkC; }
+                //else { --Iposition; }
+                --Iposition;
+                // On fait attention à backtrack sur une variable où toutes les valeurs n'ont pas déjà été testées
+                while( Iposition > 0 && csp->tabCheckedValue[Iposition] == csp->nbValue-1 ){
+                    Jposition = csp->tabCheckedValue[Iposition];
+                    csp->matrixDomain[Iposition][Jposition] = -1;
+                    --Iposition;
                 }
 
-                ++Jposition;
+                Jposition = csp->tabCheckedValue[Iposition];
+                csp->matrixDomain[Iposition][Jposition] = - 1;
+            }
+
+            ++Jposition;
         }
     }
-
-    free( tabDeepestVariable );
 }
