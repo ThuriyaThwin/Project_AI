@@ -86,7 +86,7 @@ int main(int argc, char** argv){
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
     printf("\n++++ RESULTAT(S) ++++\n");
-    printAllStack(csp->results, csp->nbVariable);
+    if( atoi(argv[5] ) ) printAllStack(csp->results, csp->nbVariable);
     printf("\n\n%d solution(s) trouvée(s) :\n", csp->nbResult);
     printf("TEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
 

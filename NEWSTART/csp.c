@@ -25,8 +25,7 @@ CSP* initCSP(int nbVariable, int nbValue){
 
     // Allocation Tableau de sauvegarde d'état
     newCSP->tabCheckedValue = createNewTab(newCSP->nbVariable);
-    for(int i=0; i < newCSP->nbVariable; ++i)
-        newCSP->tabCheckedValue[i] = -1;
+    initTab(newCSP->tabCheckedValue, newCSP->nbVariable, -1);
 
     // Allocation de la pile de résultats
     newCSP->results = initStack();
@@ -41,16 +40,20 @@ CSP* initCSP(int nbVariable, int nbValue){
 void freeCSP(CSP* csp, int flag){
 
     // Libération de la mémoire allouée pour les différents tableaux :
-    free(csp->tabCheckedValue);
+    printf("\n> Libération mémoire matrice de domaines.\n");
     freeMatrix(csp->matrixDomain, csp->nbVariable);
 
+    printf("> Libération mémoire matrice de contraintes & tuples.\n");
     if(flag == 1) freeConstraintMatrixPigeon(csp);
     if(flag == 2) freeConstraintMatrixDame(csp);
 
+    printf("> Libération mémoire pile de résultats.\n");
     // Libération mémoire pile
     wipeStack(csp->results, csp->nbResult);
 
+    printf("> Libération mémoire csp.\n");
     // Libération de mémoire pour la structure CSP
+    free(csp->tabCheckedValue);
     free( csp );
 }
 
@@ -92,10 +95,6 @@ int**** newConstraintMatrix(CSP* csp){
 
 void freeConstraintMatrixDame(CSP* csp){
 
-    // Chaque contrainte, pointe toujours vers la même matrice de couple/tuple (en mémoire)
-    // On la libère donc une seule fois !
-
-    // Faut-il encore la trouvée :
     for(int i=0; i < csp->nbVariable; ++i){
         for(int j=i+1; j < csp->nbVariable; ++j){
             if( csp->matrixConstraint[i][j] != NULL ){                          // Si il existe bien une matrice de tuple/couple
@@ -140,9 +139,6 @@ void freeConstraintMatrixPigeon(CSP* csp){
 
     Si il existe une contrainte entre la variable indexVariable & i
         -> recherche une correspondance dans les tuples permis (couple de valeur permis)
-
-    renvoi 1 si contrainte trouvée
-    renvoi 0 si aucune contrainte trouvée
 */
 int checkForConstraint(CSP* csp, int indexVariable){
     int varWitchConstraint;
@@ -156,9 +152,7 @@ int checkForConstraint(CSP* csp, int indexVariable){
 }
 
 /*
-    Récupère la valeur prise par deux variables dans leurs domaines respectifs.
-    Renvoi 1 si la contrainte est violée.
-    Renvoi 0 si la contrainte est non-violée.
+    TODO commentaires
 */
 int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo){
     // Recherche de la valeur prise par nos deux variables :
@@ -170,10 +164,6 @@ int checkAllowedCouple(CSP* csp, int indexVarOne, int indexVarTwo){
         colTwo = findValueDomain(csp, indexVarTwo, 1);
         if( (colOne >= 0) && (colTwo >= 0) ) break;
     }
-
-
-    //printf("D%d[%d] D%d[%d]: %d\n", indexVarOne, indexVarTwo, colOne, colTwo, csp->matrixConstraint[indexVarOne][indexVarTwo][colOne][colTwo]);
-    //printMatrix(csp->matrixConstraint[indexVarOne][indexVarTwo], csp->nbValue, csp->nbValue);
 
     // On regarde si le Tuple ( colOne, colTwo ) == 1 :
     // Couple autorisé par la contrainte -> contrainte non-violée

@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 int* createNewTab(int nbElement);
+void initTab(int* tab, int nbElement, int value);
 int** createNewMatrix(int lenDimOne, int lenDimTwo);
 void freeMatrix(int** matrix, int lenDimOne);
 void resetMatrix(int** matrix, int lenDimOne, int lenDimTwo);

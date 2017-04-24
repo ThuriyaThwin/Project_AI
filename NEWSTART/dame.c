@@ -39,6 +39,7 @@ CSP* dameGenerator(int nbDame, int writeTXT){
 
             //Lignes tuples permis
             newCSP->matrixConstraint[i][j] = createNewMatrix(nbDame, nbDame);
+            newCSP->matrixConstraint[j][i] = newCSP->matrixConstraint[i][j];
 
             for(int k = 0; k < nbDame; ++k)
                 for(int l = 0; l < nbDame; ++l) {
@@ -49,8 +50,6 @@ CSP* dameGenerator(int nbDame, int writeTXT){
                     }
                     newCSP->matrixConstraint[i][j][k][l] = 1;
                 }
-
-            newCSP->matrixConstraint[j][i] = newCSP->matrixConstraint[i][j];
 
             //printf("%d - %d && %d - %d\n", i, j, j, i);
             //printMatrix(newCSP->matrixConstraint[i][j], newCSP->nbValue, newCSP->nbValue);

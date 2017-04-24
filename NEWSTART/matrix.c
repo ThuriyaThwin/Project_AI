@@ -4,7 +4,18 @@
 #include "matrix.h"
 
 // Création d'un tableau d'entier à nbElement
-int* createNewTab(int nbElement){ return malloc( nbElement * sizeof(int) ); }
+int* createNewTab(int nbElement){
+    int* tab = malloc( nbElement * sizeof(*tab) );
+    initTab(tab, nbElement, 0);
+    return tab;
+}
+
+// Initialisation, à une certaine valeur, tout un tableau
+void initTab(int* tab, int nbElement, int value){
+    for(int i=0; i < nbElement; ++i){
+        tab[i] = value;
+    }
+}
 
 // Création d'une matrice à lenDimOne * lenDimTwo éléments
 int** createNewMatrix(int lenDimOne, int lenDimTwo){
