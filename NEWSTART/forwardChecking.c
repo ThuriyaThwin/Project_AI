@@ -21,8 +21,10 @@ void editDomains(CSP *csp, int cas, int iPosition, int jPosition, int value){
     else if (cas == 2){
         for(int i = iPosition + 1; i < csp->nbValue; ++i){
             int decalage = i -  iPosition;
-            csp->matrixDomain[i][jPosition + decalage] = value;
             csp->matrixDomain[i][jPosition] = value;
+
+            if(jPosition + decalage < csp->nbVariable - 1)
+                csp->matrixDomain[i][jPosition + decalage] = value;
 
             if(jPosition - decalage > 0){
                 csp->matrixDomain[i][jPosition - decalage] = value;
@@ -47,7 +49,6 @@ void forwardChecking(CSP *csp, int cas) {
     while (csp->matrixDomain[0][csp->nbValue - 1] != -1) {
 
         //sleep(1);
-
         csp->matrixDomain[i][j] = 1;
         editDomains(csp, cas, i, j, IMPOSSIBLE);
 
