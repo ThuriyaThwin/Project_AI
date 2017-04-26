@@ -71,3 +71,40 @@ void printAllStack(Stack* stack, int row){
     }
     printf(" -- FOND DE PILE --\n");
 }
+
+
+StackInt* initStackInt(){
+    StackInt* stack = malloc(sizeof( *stack ));
+    stack->top = NULL;
+
+    return stack;
+}
+
+void pushInt(StackInt* stack, int var){
+    NodeInt* newTop = malloc( sizeof( *newTop ));
+    if( stack == NULL || newTop == NULL ){
+        printf("Erreur : stack or newTop NULL.\n");
+        exit(-1);
+    }
+
+    newTop->var = var;
+    newTop->next = stack->top;
+    stack->top = newTop;
+}
+
+int popInt(StackInt* stack){
+    int val;
+
+    if( stack->top != NULL ){
+        val = stack->top->var;
+        NodeInt* node = stack->top;
+        stack->top = stack->top->next;
+        free(node);
+    }
+    else{
+        printf("Erreur : top NULL.\n");
+        exit(-1);
+    }
+
+    return val;
+}

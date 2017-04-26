@@ -6,6 +6,7 @@
 #include "pigeon.h"
 #include "dame.h"
 #include "forwardChecking.h"
+#include "forwardCheckingHeuristic.h"
 
 CSP* csp;
 
@@ -41,7 +42,7 @@ int main(int argc, char** argv){
                 forwardChecking(csp, 1);
             }
             else if(atoi(argv[4]) == 2){ // Heuristique
-
+                forwardCheckingH(csp, 2);
             }
         }
         if(atoi(argv[3]) == 2){ // BJ
@@ -70,7 +71,7 @@ int main(int argc, char** argv){
                 forwardChecking(csp, 2);
             }
             if(atoi(argv[4]) == 2){ // Heuristique
-
+                forwardCheckingH(csp, 2);
             }
         }
 

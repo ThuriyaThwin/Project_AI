@@ -17,4 +17,19 @@ int* pop_n_time(Stack* stack, int nTime);
 void wipeStack(Stack* stack, int row);
 void printAllStack(Stack* stack, int row);
 
+
+
+typedef struct NodeInt{
+    int var;
+    struct NodeInt* next;
+} NodeInt;
+
+typedef struct StackInt{
+    struct NodeInt* top;
+} StackInt;
+
+StackInt* initStackInt();
+void pushInt(StackInt* stack, int val);
+int popInt(StackInt* stack);
+
 #endif // STACK_H

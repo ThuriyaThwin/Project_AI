@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "forwardChecking.h"
+#include "forwardCheckingHeuristic.h"
 #include "matrix.h"
 #include "csp.h"
 
@@ -12,7 +12,7 @@
 
 
 
-void editDomains(CSP *csp, int cas, int iPosition, int jPosition, int value){
+void editDomainsH(CSP *csp, int cas, int iPosition, int jPosition, int value){
     if(cas == 1){
         for(int i = iPosition + 1; i < csp->nbValue; ++i){
             csp->matrixDomain[i][jPosition] = value;
@@ -40,23 +40,26 @@ void editDomains(CSP *csp, int cas, int iPosition, int jPosition, int value){
 /*
     Procédure de forward checking sans heuristique :
 */
-void forwardChecking(CSP *csp, int cas) {
+void forwardCheckingH(CSP *csp, int cas) {
     int checkC;
     int i = 0;
     int j = 0;
+
+    StackInt *stackInt = initStackInt();
 
 
     while (csp->matrixDomain[0][csp->nbValue - 1] != -1) {
 
         //sleep(1);
-        csp->matrixDomain[i][j] = 1;
-        editDomains(csp, cas, i, j, IMPOSSIBLE);
+        csp->matrixDomain[i][j] = AFFECTE;
+        editDomainsH(csp, cas, i, j, IMPOSSIBLE);
 
         checkC = checkForConstraint(csp, i);
 
         if (checkC < 0) { // Contrainte non-violée
             //printf("{ [%d][%d] }\n", Iposition, j);
             addCheckedValue(csp, i, j);
+            pushInt(stackInt, i);
 
             // Cas où toutes les variables ne sont pas encore testées
             if (i < csp->nbVariable - 1) {
@@ -91,22 +94,21 @@ void forwardChecking(CSP *csp, int cas) {
             if (j == csp->nbValue - 1) {
 
                 csp->matrixDomain[i][j] = -1;
-                editDomains(csp, cas, i, j, VIDE);
+                editDomainsH(csp, cas, i, j, VIDE);
 
-                --i;
+                i = popInt(stackInt);
                 // On fait attention à backtrack sur une variable où toutes les valeurs n'ont pas déjà été testées
                 while (i > 0 && csp->tabCheckedValue[i] == csp->nbValue - 1) {
                     j = csp->tabCheckedValue[i];
                     csp->matrixDomain[i][j] = -1;
-                    editDomains(csp, cas, i, j, VIDE);
-                    --i;
+                    editDomainsH(csp, cas, i, j, VIDE);
+                    i = popInt(stackInt);
                 }
 
                 j = csp->tabCheckedValue[i];
                 csp->matrixDomain[i][j] = -1;
-                editDomains(csp, cas, i, j, VIDE);
+                editDomainsH(csp, cas, i, j, VIDE);
             }
-
             ++j;
         }
     }
