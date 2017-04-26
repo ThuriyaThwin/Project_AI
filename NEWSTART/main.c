@@ -51,7 +51,8 @@ int main(int argc, char** argv){
                 backjumping(csp);
             }
             else if(atoi(argv[4]) == 2){ // Heuristique
-
+                printf("---> AVEC HEURISTIQUE MC\n");
+                backjumpingMaximumConstraint(csp);
             }
         }
     }
@@ -80,7 +81,8 @@ int main(int argc, char** argv){
                 backjumping(csp);
             }
             else if(atoi(argv[4]) == 2){ // Heuristique
-
+                printf("---> AVEC HEURISTIQUE MC\n");
+                backjumpingMaximumConstraint(csp);
             }
         }
     }
