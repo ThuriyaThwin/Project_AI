@@ -9,10 +9,7 @@ void backjumping(CSP* csp){
     int Iposition = 0;
     int Jposition = 0;
 
-    long long unsigned int nb = 0;
-
     while(csp->matrixDomain[0][csp->nbValue-1] != -1){
-        ++nb;
         csp->matrixDomain[Iposition][Jposition] = 1;
         matrixViolatedConstraint[Iposition][Jposition] = checkForConstraint(csp, Iposition);
         if( matrixViolatedConstraint[Iposition][Jposition] < 0 ){
@@ -55,7 +52,6 @@ void backjumping(CSP* csp){
             ++Jposition;
         }
     }
-
-    printf("\n>>>> %llu itérations.\n", nb);
+    
     freeMatrix(matrixViolatedConstraint, csp->nbValue);
 }
