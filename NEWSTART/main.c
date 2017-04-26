@@ -6,7 +6,6 @@
 #include "pigeon.h"
 #include "dame.h"
 #include "forwardChecking.h"
-#include "forwardCheckingHeuristic.h"
 
 CSP* csp;
 
@@ -41,19 +40,13 @@ int main(int argc, char** argv){
                 printf("---> SANS HEURISTIQUE\n");
                 forwardChecking(csp, 1);
             }
-            else if(atoi(argv[4]) == 2){ // Heuristique
-                forwardCheckingH(csp, 2);
-            }
         }
-        if(atoi(argv[3]) == 2){ // BJ
+
+        else if(atoi(argv[3]) == 2){ // BJ
             printf("--> BACKJUMPING\n");
             if(atoi(argv[4]) == 1){ // Normal
                 printf("---> SANS HEURISTIQUE\n");
                 backjumping(csp);
-            }
-            else if(atoi(argv[4]) == 2){ // Heuristique
-                printf("---> AVEC HEURISTIQUE MC\n");
-                backjumpingMaximumConstraint(csp);
             }
         }
     }
@@ -70,9 +63,6 @@ int main(int argc, char** argv){
                 printf("---> SANS HEURISTIQUE\n");
                 forwardChecking(csp, 2);
             }
-            if(atoi(argv[4]) == 2){ // Heuristique
-                forwardCheckingH(csp, 2);
-            }
         }
 
         else if(atoi(argv[3]) == 2){ // BJ
@@ -80,10 +70,6 @@ int main(int argc, char** argv){
             if(atoi(argv[4]) == 1){ // Normal
                 printf("---> SANS HEURISTIQUE\n");
                 backjumping(csp);
-            }
-            else if(atoi(argv[4]) == 2){ // Heuristique
-                printf("---> AVEC HEURISTIQUE MC\n");
-                backjumpingMaximumConstraint(csp);
             }
         }
     }
