@@ -7,6 +7,8 @@
 #include "dame.h"
 #include "forwardChecking.h"
 
+CSP* csp;
+
 int main(int argc, char** argv){
 
     if( argc != 6 ){
@@ -16,8 +18,12 @@ int main(int argc, char** argv){
         exit(0);
     }
 
+    if( atoi(argv[1]) < 2 ){
+        printf("Erreur : nombre de variable à traiter insuffisant.\n");
+        exit(0);
+    }
+
     clock_t begin = clock();
-    CSP* csp;
 
     // Pigeon
     if(atoi(argv[2]) == 1){
@@ -34,11 +40,8 @@ int main(int argc, char** argv){
                 printf("---> SANS HEURISTIQUE\n");
                 forwardChecking(csp, 1);
             }
-            if(atoi(argv[4]) == 2){ // Heuristique
+            else if(atoi(argv[4]) == 2){ // Heuristique
 
-            }
-            else{
-                //erreur
             }
         }
         if(atoi(argv[3]) == 2){ // BJ
@@ -47,21 +50,13 @@ int main(int argc, char** argv){
                 printf("---> SANS HEURISTIQUE\n");
                 backjumping(csp);
             }
-            if(atoi(argv[4]) == 2){ // Heuristique
+            else if(atoi(argv[4]) == 2){ // Heuristique
 
             }
-            else{
-                //erreur
-            }
         }
-        else{
-            //erreur
-        }
-
     }
-
     // Dame
-    if(atoi(argv[2]) == 2){
+    else if(atoi(argv[2]) == 2){
         printf("-> DAME\n");
         int nbDame = atoi( argv[1] );
         printf("Init CSP : \n");
@@ -76,32 +71,19 @@ int main(int argc, char** argv){
             if(atoi(argv[4]) == 2){ // Heuristique
 
             }
-            else{
-                //erreur
-            }
         }
-        if(atoi(argv[3]) == 2){ // BJ
+
+        else if(atoi(argv[3]) == 2){ // BJ
             printf("--> BACKJUMPING\n");
             if(atoi(argv[4]) == 1){ // Normal
                 printf("---> SANS HEURISTIQUE\n");
                 backjumping(csp);
             }
-            if(atoi(argv[4]) == 2){ // Heuristique
+            else if(atoi(argv[4]) == 2){ // Heuristique
 
             }
-            else{
-                //erreur
-            }
-        }
-        else{
-            //erreur
         }
     }
-    else{
-        //erreur
-    }
-
-    //if( atoi(argv[5]) ) printCSP(csp);
 
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
@@ -112,31 +94,6 @@ int main(int argc, char** argv){
     printf("TEMPS EXECUTION CPU : %lf secondes.\n", time_spent);
 
     freeCSP(csp, atoi(argv[2]));
-
-    /*
-        EXEMPLE fonctionnement CSP contrainte + tuples
-
-        int** subArray = malloc( sizeof(int*) * 2 );
-        subArray[0] = malloc( sizeof(int) * 2 );
-        subArray[1] = malloc( sizeof(int) * 2 );
-
-        subArray[0][0] = 3;
-        subArray[0][1] = 2;
-        subArray[1][0] = 1;
-        subArray[1][1] = 0;
-
-        int**** mainArray = malloc( sizeof(int***) * 2 );
-        mainArray[0] = malloc( sizeof(int**) * 2 );
-        mainArray[1] = malloc( sizeof(int**) * 2 );
-
-        mainArray[0][0] = subArray;
-
-        printf("%d\n", mainArray[0][0][0][0]);
-        printf("%d\n", mainArray[0][0][0][1]);
-        printf("%d\n", mainArray[0][0][1][0]);
-        printf("%d\n", mainArray[0][0][1][1]);
-
-    */
 
     return 0;
 }
