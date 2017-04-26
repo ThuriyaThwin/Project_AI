@@ -5,6 +5,7 @@
 #include "backj.h"
 #include "pigeon.h"
 #include "dame.h"
+#include "forwardChecking.h"
 
 int main(int argc, char** argv){
 
@@ -28,7 +29,17 @@ int main(int argc, char** argv){
         printf("OK\n");
 
         if(atoi(argv[3]) == 1){ // FC
+            printf("--> FORWARD CHECKING\n");
+            if(atoi(argv[4]) == 1){ // Normal
+                printf("---> SANS HEURISTIQUE\n");
+                forwardChecking(csp, 1);
+            }
+            if(atoi(argv[4]) == 2){ // Heuristique
 
+            }
+            else{
+                //erreur
+            }
         }
         if(atoi(argv[3]) == 2){ // BJ
             printf("--> BACKJUMPING\n");
@@ -57,7 +68,17 @@ int main(int argc, char** argv){
         csp = dameGenerator(nbDame, atoi(argv[5]));
         printf("OK\n");
         if(atoi(argv[3]) == 1){ // FC
+            printf("--> FORWARD CHECKING\n");
+            if(atoi(argv[4]) == 1){ // Normal
+                printf("---> SANS HEURISTIQUE\n");
+                forwardChecking(csp, 2);
+            }
+            if(atoi(argv[4]) == 2){ // Heuristique
 
+            }
+            else{
+                //erreur
+            }
         }
         if(atoi(argv[3]) == 2){ // BJ
             printf("--> BACKJUMPING\n");

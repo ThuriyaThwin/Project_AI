@@ -17,7 +17,7 @@ void printMat(int **domaines, int nbPigeons, int nbNids){
     }
 }
 
-/*void forwardCheckingPigeons(int **domaine, int nbPigeons, int affiche){
+void forwardCheckingPigeons(int **domaine, int nbPigeons, int affiche){
     int nbNids = nbPigeons - 1;
     Stack *stack = initStack();
 
@@ -26,6 +26,7 @@ void printMat(int **domaines, int nbPigeons, int nbNids){
             if(affiche == 1)
                 printMat(domaine, nbPigeons, nbNids);
             if(domaine[i][j] == VIDE){
+                //printMat(domaine, nbPigeons, nbNids);
                 push(stack, domaine, nbPigeons, nbNids);
                 domaine[i][j] = AFFECTE;
                 fillColumns(domaine, i, j, nbPigeons, IMPOSSIBLE);
@@ -40,39 +41,7 @@ void printMat(int **domaines, int nbPigeons, int nbNids){
                     int index = checkForConstraintInRow(domaine, i, nbNids);
                     domaine = pop(stack);
                     domaine[i][index] = IMPOSSIBLE;
-                    j = 0;
-                }
-                else{
-                    ++j;
-                }
-            }
-        }
-    }
-
-}*/
-
-void forwardCheckingPigeons(int **domaine, int nbPigeons, int affiche){
-    int nbNids = nbPigeons - 1;
-    Stack *stack = initStack();
-
-    for(int i = 0; i < nbPigeons; ){
-        for(int j = 0; j < nbNids; ){
-            if(domaine[i][j] == VIDE){
-                push(stack, domaine, nbPigeons, nbNids);
-                domaine[i][j] = AFFECTE;
-                fillColumns(domaine, i, j, nbPigeons, IMPOSSIBLE);
-                ++i;
-                j = 0;
-            }
-            else {
-                if((domaine[i][j] == IMPOSSIBLE) && (j == nbNids - 1)){
-                    if(i == 0)
-                        return;
-                    --i;
-                    int index = checkForConstraintInRow(domaine, i, nbNids);
-                    domaine = pop(stack);
-                    domaine[i][index] = IMPOSSIBLE;
-                    j = 0;
+                    j = index;
                 }
                 else{
                     ++j;
@@ -82,3 +51,4 @@ void forwardCheckingPigeons(int **domaine, int nbPigeons, int affiche){
     }
 
 }
+
